@@ -4,20 +4,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.zhengjie</groupId>
-    <artifactId>eladmin</artifactId>
+    <groupId>com.msw</groupId>
+    <artifactId>easy-admin</artifactId>
     <packaging>pom</packaging>
     <version>1.5</version>
 
     <modules>
-        <module>eladmin-common</module>
-        <module>eladmin-logging</module>
-        <module>eladmin-system</module>
-        <module>eladmin-tools</module>
-        <module>eladmin-generator</module>
+        <module>easy-common</module>
+        <module>easy-logging</module>
+        <module>easy-system</module>
+        <module>easy-tools</module>
+        <module>easy-generator</module>
     </modules>
 
-    <name>el-admin</name>
+    <name>easy-admin</name>
     <url>http://auauz.net</url>
 
     <parent>
