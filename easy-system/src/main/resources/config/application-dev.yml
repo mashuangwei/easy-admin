@@ -1,5 +1,25 @@
+server:
+  port: 8000
 #配置数据源
 spring:
+  redis:
+    #数据库索引
+    database: 0
+    host: 192.168.165.71
+    port: 6379
+    password:
+    jedis:
+      pool:
+        #最大连接数
+        max-active: 100
+        #最大阻塞等待时间(负数表示没限制)
+        max-wait: 2000
+        #最大空闲
+        max-idle: 500
+        #最小空闲
+        min-idle: 8
+    #连接超时时间
+    timeout: 5000
   datasource:
     druid:
       type: com.alibaba.druid.pool.DruidDataSource
@@ -44,7 +64,11 @@ spring:
     hibernate:
       # 生产环境设置成 none，避免程序运行时自动更新数据库结构
       ddl-auto: update
-
+  #配置 Jpa
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: true
 #jwt
 jwt:
   header: Authorization
@@ -60,3 +84,12 @@ jwt:
 #是否允许生成代码，生产环境设置为false
 generator:
   enabled: true
+
+#七牛云
+qiniu:
+  # 文件大小 /M
+  max-size: 15
+
+#验证码有效时间/分钟
+code:
+  expiration: 5
