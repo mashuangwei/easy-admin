@@ -1,4 +1,4 @@
-# eladmin
+# easy-admin
 
 项目基于 Spring Boot 2.1.0 、 Spring boot Jpa、 Spring Security、redis、Vue的前后端分离的权限管理系统，项目采用分模块开发方式， 权限控制采用 RBAC（Role-Based Access Control，基于角色的访问控制），支持数据字典、数据权限管理、前端菜单支持动态路由
 
@@ -6,13 +6,12 @@
 
 |     |   后端源码  |   前端源码  |
 |---  |--- | --- |
-|  github   |  https://github.com/elunez/eladmin   |  https://github.com/elunez/eladmin-qd   |
-|  码云   |  https://github.com/elunez/eladmin   |  https://gitee.com/elunez/eladmin-qt   |
+|  github   |  https://github.com/mashuangwei/easy-admin   |  https://github.com/elunez/eladmin-qd   |
 #### 开发文档
 [https://docs.auauz.net/#/](https://docs.auauz.net/#/)
 
 #### 预览地址
-[https://auauz.net](https://auauz.net)
+[http://cosboy.cn](http://cosboy.cn)
 
 ##### 用户账号密码
 
@@ -26,7 +25,7 @@
 - IDE：IntelliJ IDEA （后端）
 - IDE：JetBrains WebStorm（前端）
 - 依赖管理：Maven
-- 数据库：MySQL 5.5.59
+- 数据库：MySQL 5.6
 
 #### 功能模块
 ```
@@ -129,15 +128,7 @@
     </tr>
 </table>
 
-#### 项目捐赠
 
-> Donate
-> 
-> 项目的发展离不开你的支持，请作者喝杯咖啡吧☕！
-
-|   微信  |   支付宝  |
-|--- | --- |
-|  ![](https://i.loli.net/2019/03/28/5c9c951c61a9a.png)   |  ![](https://i.loli.net/2019/03/28/5c9c95355fecb.png)  |
 #### 反馈交流
 
-- QQ交流群：891137268
+
