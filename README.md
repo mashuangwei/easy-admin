@@ -1,15 +1,15 @@
 # easy-admin
 
-项目基于 Spring Boot 2.1.0 、 Spring boot Jpa、 Spring Security、redis、Vue的前后端分离的权限管理系统，项目采用分模块开发方式， 权限控制采用 RBAC（Role-Based Access Control，基于角色的访问控制），支持数据字典、数据权限管理、前端菜单支持动态路由
+项目基于 Spring Boot 2.1.4 、 Spring boot Jpa、 Spring Security、redis、Vue的前后端分离的权限管理系统，项目采用分模块开发方式， 权限控制采用 RBAC（Role-Based Access Control，基于角色的访问控制），支持数据字典、数据权限管理、前端菜单支持动态路由
 
 #### 项目源码
 
 |     |   后端源码  |   前端源码  |
 |---  |--- | --- |
-|  github   |  https://github.com/mashuangwei/easy-admin   |  https://github.com/elunez/eladmin-qd   |
+|  github   |  https://github.com/mashuangwei/easy-admin   |  https://github.com/elunez/easy-qd   |
 
 #### 开发文档
-[https://docs.auauz.net/#/](https://docs.auauz.net/#/)
+
 
 #### 预览地址
 [http://cosboy.cn](http://cosboy.cn)
@@ -59,14 +59,14 @@
 #### 项目结构
 ```
 # 项目模块如下
-- eladmin-common 公共模块
+- easy-common 公共模块
     - aop.limit 接口限流自定义注解
     - exception 项目统一异常的处理
     - mapper mapstruct的通用mapper
     - redis redis缓存相关配置
     - swagger2 接口文档配置
     - utils 通用工具
-- eladmin-system 系统核心模块
+- easy-system 系统核心模块
 	- config 配置跨域与静态资源
 	- modules 系统相关模块
 		- monitor 系统监控
@@ -85,13 +85,13 @@
 		    - service 用户登录与权限的处理
 		    - utils JWT工具
     	- system 系统管理
-- eladmin-logging 系统日志模块
-- eladmin-tools 系统第三方工具模块
-- eladmin-generator 系统代码生成模块
+- easy-logging 系统日志模块
+- easy-tools 系统第三方工具模块
+- easy-generator 系统代码生成模块
 ```
 #### 后端技术栈
 
-- 基础框架：Spring Boot 2.1.0.RELEASE
+- 基础框架：Spring Boot 2.1.4.RELEASE
 - 持久层框架：Spring boot Jpa
 - 安全框架：Spring Security
 - 缓存框架：Redis
