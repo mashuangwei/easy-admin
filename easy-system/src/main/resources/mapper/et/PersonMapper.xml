@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.msw.modules.et.mapper.PersonMapper">
-  <resultMap id="BaseResultMap" type="com.msw.modules.et.domain.Person">
+  <resultMap id="BaseResultMap" type="com.msw.modules.et.entity.Person">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="age" jdbcType="INTEGER" property="age" />
@@ -11,7 +11,7 @@
     id, `name`, age, adress
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from tb_person
     where id = #{id,jdbcType=BIGINT}
@@ -20,13 +20,13 @@
     delete from tb_person
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.msw.modules.et.domain.Person">
-    insert into tb_person (id, `name`, age, 
+  <insert id="insert" parameterType="com.msw.modules.et.entity.Person" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_person (id, `name`, age,
       adress)
-    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER},
       #{adress,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.msw.modules.et.domain.Person">
+  <insert id="insertSelective" parameterType="com.msw.modules.et.entity.Person" useGeneratedKeys="true" keyProperty="id">
     insert into tb_person
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -57,7 +57,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.msw.modules.et.domain.Person">
+  <update id="updateByPrimaryKeySelective" parameterType="com.msw.modules.et.entity.Person">
     update tb_person
     <set>
       <if test="name != null">
@@ -72,7 +72,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.msw.modules.et.domain.Person">
+  <update id="updateByPrimaryKey" parameterType="com.msw.modules.et.entity.Person">
     update tb_person
     set `name` = #{name,jdbcType=VARCHAR},
       age = #{age,jdbcType=INTEGER},

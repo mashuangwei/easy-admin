@@ -1,6 +1,15 @@
-package com.msw.modules.et.domain;
+package com.msw.modules.et.entity;
 
-public class Person {
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
+import java.io.Serializable;
+
+@TableName("tb_person")
+public class Person implements Serializable {
+
+    @TableId(value = "id" ,type = IdType.AUTO)
     private Long id;
 
     private String name;

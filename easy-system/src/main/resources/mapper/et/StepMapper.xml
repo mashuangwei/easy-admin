@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msw.modules.et.mapper.StepMapper">
+  <resultMap id="BaseResultMap" type="com.msw.modules.et.entity.Step">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="step_name" jdbcType="VARCHAR" property="stepName" />
+    <result column="step_type" jdbcType="VARCHAR" property="stepType" />
+    <result column="retry" jdbcType="INTEGER" property="retry" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="execute_result" jdbcType="VARCHAR" property="executeResult" />
+    <result column="sleep_time" jdbcType="INTEGER" property="sleepTime" />
+    <result column="step_index" jdbcType="INTEGER" property="stepIndex" />
+    <result column="execute_flag" jdbcType="BIT" property="executeFlag" />
+    <result column="case_id" jdbcType="BIGINT" property="caseId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, step_name, step_type, retry, description, execute_result, sleep_time, step_index, 
+    execute_flag, case_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_step
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_step
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.msw.modules.et.entity.Step">
+    insert into tb_step (id, step_name, step_type, 
+      retry, description, execute_result, 
+      sleep_time, step_index, execute_flag, 
+      case_id)
+    values (#{id,jdbcType=BIGINT}, #{stepName,jdbcType=VARCHAR}, #{stepType,jdbcType=VARCHAR}, 
+      #{retry,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, #{executeResult,jdbcType=VARCHAR}, 
+      #{sleepTime,jdbcType=INTEGER}, #{stepIndex,jdbcType=INTEGER}, #{executeFlag,jdbcType=BIT},
+      #{caseId,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.msw.modules.et.entity.Step">
+    insert into tb_step
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="stepName != null">
+        step_name,
+      </if>
+      <if test="stepType != null">
+        step_type,
+      </if>
+      <if test="retry != null">
+        retry,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="executeResult != null">
+        execute_result,
+      </if>
+      <if test="sleepTime != null">
+        sleep_time,
+      </if>
+      <if test="stepIndex != null">
+        step_index,
+      </if>
+      <if test="executeFlag != null">
+        execute_flag,
+      </if>
+      <if test="caseId != null">
+        case_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="stepName != null">
+        #{stepName,jdbcType=VARCHAR},
+      </if>
+      <if test="stepType != null">
+        #{stepType,jdbcType=VARCHAR},
+      </if>
+      <if test="retry != null">
+        #{retry,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="executeResult != null">
+        #{executeResult,jdbcType=VARCHAR},
+      </if>
+      <if test="sleepTime != null">
+        #{sleepTime,jdbcType=INTEGER},
+      </if>
+      <if test="stepIndex != null">
+        #{stepIndex,jdbcType=INTEGER},
+      </if>
+      <if test="executeFlag != null">
+        #{executeFlag,jdbcType=BIT},
+      </if>
+      <if test="caseId != null">
+        #{caseId,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.msw.modules.et.entity.Step">
+    update tb_step
+    <set>
+      <if test="stepName != null">
+        step_name = #{stepName,jdbcType=VARCHAR},
+      </if>
+      <if test="stepType != null">
+        step_type = #{stepType,jdbcType=VARCHAR},
+      </if>
+      <if test="retry != null">
+        retry = #{retry,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="executeResult != null">
+        execute_result = #{executeResult,jdbcType=VARCHAR},
+      </if>
+      <if test="sleepTime != null">
+        sleep_time = #{sleepTime,jdbcType=INTEGER},
+      </if>
+      <if test="stepIndex != null">
+        step_index = #{stepIndex,jdbcType=INTEGER},
+      </if>
+      <if test="executeFlag != null">
+        execute_flag = #{executeFlag,jdbcType=BIT},
+      </if>
+      <if test="caseId != null">
+        case_id = #{caseId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.msw.modules.et.entity.Step">
+    update tb_step
+    set step_name = #{stepName,jdbcType=VARCHAR},
+      step_type = #{stepType,jdbcType=VARCHAR},
+      retry = #{retry,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR},
+      execute_result = #{executeResult,jdbcType=VARCHAR},
+      sleep_time = #{sleepTime,jdbcType=INTEGER},
+      step_index = #{stepIndex,jdbcType=INTEGER},
+      execute_flag = #{executeFlag,jdbcType=BIT},
+      case_id = #{caseId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

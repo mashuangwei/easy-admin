@@ -2,9 +2,9 @@ package com.msw.modules.et.mapper;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.msw.modules.et.domain.Person;
+import com.msw.modules.et.entity.Person;
 
-@DS("master_db")
+@DS("devops_master")
 public interface PersonMapper extends BaseMapper<Person> {
     int deleteByPrimaryKey(Long id);
 

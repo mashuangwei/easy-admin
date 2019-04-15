@@ -3,6 +3,9 @@ server:
 
 #配置数据源
 spring:
+  data:
+    mongodb:
+      uri: mongodb://192.168.165.59:27017/test
   datasource:
     druid:
       stat-view-servlet:
