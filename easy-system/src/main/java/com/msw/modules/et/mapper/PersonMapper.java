@@ -4,7 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.msw.modules.et.entity.Person;
 
-@DS("devops_master")
+@DS("master_db")
 public interface PersonMapper extends BaseMapper<Person> {
     int deleteByPrimaryKey(Long id);
 

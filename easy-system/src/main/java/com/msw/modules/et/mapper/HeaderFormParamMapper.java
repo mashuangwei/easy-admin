@@ -9,7 +9,7 @@ import com.msw.modules.et.entity.HeaderFormParam;
  * @date 2019-01-23 16:13
  * @description:
  */
-@DS("devops_master")
+@DS("master_db")
 public interface HeaderFormParamMapper extends BaseMapper<HeaderFormParam> {
     int insertData(HeaderFormParam record);
 }

@@ -7,7 +7,7 @@
     <groupId>com.msw</groupId>
     <artifactId>easy-admin</artifactId>
     <packaging>pom</packaging>
-    <version>1.5</version>
+    <version>1.7</version>
 
     <modules>
         <module>easy-common</module>

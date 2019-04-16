@@ -4,7 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.msw.modules.et.entity.HttpStep;
 
-@DS("devops_master")
+@DS("master_db")
 public interface HttpStepMapper extends BaseMapper<HttpStep> {
     int deleteByPrimaryKey(Long id);
 

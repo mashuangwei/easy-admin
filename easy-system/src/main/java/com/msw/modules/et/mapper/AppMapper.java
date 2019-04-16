@@ -9,7 +9,7 @@ import com.msw.modules.et.entity.App;
  * @date 2019-01-22 18:45
  * @description:
  */
-@DS("devops_master")
+@DS("master_db")
 public interface AppMapper extends BaseMapper<App> {
 
 }

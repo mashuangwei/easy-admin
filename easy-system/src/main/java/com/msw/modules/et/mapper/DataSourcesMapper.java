@@ -9,6 +9,6 @@ import com.msw.modules.et.entity.DataSources;
  * @date 2019-01-23 10:45
  * @description:
  */
-@DS("devops_master")
+@DS("master_db")
 public interface DataSourcesMapper extends BaseMapper<DataSources> {
 }

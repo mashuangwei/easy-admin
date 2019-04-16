@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
  * @date 2019-01-22 10:48
  * @description:
  */
-@DS("devops_master")
+@DS("master_db")
 public interface ProjectMapper extends BaseMapper<Project> {
     IPage<Project> findByAuthor(Page page, @Param("author") String author);
 

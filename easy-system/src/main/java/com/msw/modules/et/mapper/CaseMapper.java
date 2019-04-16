@@ -6,7 +6,7 @@ import com.msw.modules.et.entity.Case;
 
 import java.util.List;
 
-@DS("devops_master")
+@DS("master_db")
 public interface CaseMapper extends BaseMapper<Case> {
     int deleteByPrimaryKey(Long id);
 

@@ -9,6 +9,6 @@ import com.msw.modules.et.entity.HttpApi;
  * @date 2019-01-23 15:31
  * @description:
  */
-@DS("devops_master")
+@DS("master_db")
 public interface HttpApiMapper extends BaseMapper<HttpApi> {
 }
