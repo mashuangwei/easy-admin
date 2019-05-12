@@ -1,6 +1,7 @@
 package com.msw.modules.system.repository;
 
 import com.msw.modules.system.domain.Permission;
+import com.msw.modules.system.domain.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

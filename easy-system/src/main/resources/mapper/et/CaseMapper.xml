@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msw.modules.et.mapper.CaseMapper">
+  <resultMap id="BaseResultMap" type="com.msw.modules.et.entity.Case">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="case_name" jdbcType="VARCHAR" property="caseName" />
+    <result column="project_id" jdbcType="BIGINT" property="projectId" />
+    <result column="module_id" jdbcType="BIGINT" property="moduleId" />
+    <result column="execute_flag" jdbcType="BIT" property="executeFlag" />
+    <result column="case_type" jdbcType="VARCHAR" property="caseType" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="createor" jdbcType="VARCHAR" property="createor" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <resultMap id="allResultMap" type="com.msw.modules.et.entity.Case" extends="BaseResultMap">
+    <collection property="steps" ofType="com.msw.modules.et.entity.Step" javaType="ArrayList">
+      <id column="step_id" jdbcType="BIGINT" property="id" />
+      <result column="step_name" jdbcType="VARCHAR" property="stepName" />
+      <result column="step_type" jdbcType="VARCHAR" property="stepType" />
+      <result column="retry" jdbcType="INTEGER" property="retry" />
+      <result column="desc" jdbcType="VARCHAR" property="description" />
+      <result column="execute_result" jdbcType="VARCHAR" property="executeResult" />
+      <result column="sleep_time" jdbcType="INTEGER" property="sleepTime" />
+      <result column="step_index" jdbcType="INTEGER" property="stepIndex" />
+      <result column="executeFlag" jdbcType="INTEGER" property="executeFlag" />
+      <result column="case_id" jdbcType="BIGINT" property="caseId" />
+    </collection>
+  </resultMap>
+  <select id="selectAllResult" resultMap="allResultMap">
+    SELECT
+	c.*,
+	s.id AS step_id,
+	s.step_name,
+	s.step_type,
+	s.retry,
+	s.description as `desc`,
+	s.execute_result,
+	s.sleep_time,
+	s.step_index,
+	s.execute_flag as executeFlag,
+	s.case_id
+    FROM
+        tb_case c
+        LEFT JOIN tb_step s ON c.id = s.case_id
+  </select>
+  <sql id="Base_Column_List">
+    id, case_name, project_id, module_id, execute_flag, case_type, description, status,
+    createor, create_time, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_case
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_case
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.msw.modules.et.entity.Case">
+    insert into tb_case (id, case_name, project_id,
+      module_id, execute_flag, case_type,
+      description, status, createor,
+      create_time, update_time)
+    values (#{id,jdbcType=BIGINT}, #{caseName,jdbcType=VARCHAR}, #{projectId,jdbcType=BIGINT},
+      #{moduleId,jdbcType=BIGINT}, #{executeFlag,jdbcType=BIT}, #{caseType,jdbcType=VARCHAR},
+      #{description,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, #{createor,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.msw.modules.et.entity.Case">
+    insert into tb_case
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="case_name != null">
+        case_name,
+      </if>
+      <if test="project_id != null">
+        project_id,
+      </if>
+      <if test="module_id != null">
+        module_id,
+      </if>
+      <if test="execute_flag != null">
+        execute_flag,
+      </if>
+      <if test="excute_type != null">
+        case_type,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createor != null">
+        createor,
+      </if>
+      <if test="create_time != null">
+        create_time,
+      </if>
+      <if test="update_time != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="case_name != null">
+        #{caseName,jdbcType=VARCHAR},
+      </if>
+      <if test="project_id != null">
+        #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="module_id != null">
+        #{moduleId,jdbcType=BIGINT},
+      </if>
+      <if test="execute_flag != null">
+        #{executeFlag,jdbcType=BIT},
+      </if>
+      <if test="excute_type != null">
+        #{caseType,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createor != null">
+        #{createor,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="update_time != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.msw.modules.et.entity.Case">
+    update tb_case
+    <set>
+      <if test="case_name != null">
+        case_name = #{caseName,jdbcType=VARCHAR},
+      </if>
+      <if test="project_id != null">
+        project_id = #{projectId,jdbcType=BIGINT},
+      </if>
+      <if test="module_id != null">
+        module_id = #{moduleId,jdbcType=BIGINT},
+      </if>
+      <if test="excute_flag != null">
+        execute_flag = #{executeFlag,jdbcType=BIT},
+      </if>
+      <if test="case_type != null">
+        case_type = #{caseType,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createor != null">
+        createor = #{createor,jdbcType=VARCHAR},
+      </if>
+      <if test="create_time != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="update_time != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.msw.modules.et.entity.Case">
+    update tb_case
+    set case_name = #{caseName,jdbcType=VARCHAR},
+      project_id = #{projectId,jdbcType=BIGINT},
+      module_id = #{moduleId,jdbcType=BIGINT},
+      execute_flag = #{executeFlag,jdbcType=BIT},
+      case_type = #{caseType,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      createor = #{createor,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

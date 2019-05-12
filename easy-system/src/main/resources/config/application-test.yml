@@ -3,6 +3,9 @@ server:
 
 #配置数据源
 spring:
+  data:
+    mongodb:
+      uri: mongodb://192.168.165.59:27017/test
   datasource:
     druid:
       stat-view-servlet:
@@ -37,14 +40,14 @@ spring:
         max-pool-prepared-statement-per-connection-size: 20
         # 配置监控统计拦截的filters
         filters: stat # 注意这个值和druid原生不一致，默认启动了stat,wall
-      primary: devops_master
+      primary: master_db
       datasource:
-        devops_master:
+        master_db:
           username: root
           password: root
           driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
           url: jdbc:log4jdbc:mysql://192.168.162.223:3306/master_db?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
-        devops_slave1:
+        slave_db:
           username: root
           password: root
           driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy

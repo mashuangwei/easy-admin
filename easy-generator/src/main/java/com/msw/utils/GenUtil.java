@@ -241,6 +241,6 @@ public class GenUtil {
     }
 
     public static void main(String[] args){
-        System.out.println(FileUtil.exist("E:\\1.5.txt"));
+        System.out.println(FileUtil.exist("E:\\1.7.txt"));
     }
 }

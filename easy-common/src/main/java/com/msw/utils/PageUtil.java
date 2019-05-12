@@ -1,5 +1,6 @@
 package com.msw.utils;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.data.domain.Page;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +12,8 @@ import java.util.Map;
  * @author mashuangwei
  * @date 2018-12-10
  */
-public class PageUtil extends cn.hutool.core.util.PageUtil {
+public class PageUtil {
+
 
     /**
      * List 分页
@@ -39,11 +41,16 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
      * @return
      */
     public static Map toPage(Page page) {
-        Map map = new HashMap();
-
+        Map map = new HashMap(2);
         map.put("content",page.getContent());
         map.put("totalElements",page.getTotalElements());
+        return map;
+    }
 
+    public static Map toPage(List list, long count) {
+        Map map = new HashMap(2);
+        map.put("content",list);
+        map.put("totalElements",count);
         return map;
     }
 
@@ -61,4 +68,22 @@ public class PageUtil extends cn.hutool.core.util.PageUtil {
         return map;
     }
 
+    public static Map toPage(List list) {
+        Map map = new HashMap(2);
+        map.put("content",list);
+        return map;
+    }
+
+    public static Map toPage(Object object) {
+        Map map = new HashMap(2);
+        map.put("content",object);
+        return map;
+    }
+
+    public static Map toPage(IPage page) {
+        Map map = new HashMap(2);
+        map.put("content",page.getRecords());
+        map.put("totalElements",page.getTotal());
+        return map;
+    }
 }

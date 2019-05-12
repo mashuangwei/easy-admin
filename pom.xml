@@ -7,7 +7,7 @@
     <groupId>com.msw</groupId>
     <artifactId>easy-admin</artifactId>
     <packaging>pom</packaging>
-    <version>1.5</version>
+    <version>1.7</version>
 
     <modules>
         <module>easy-common</module>
@@ -31,7 +31,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <jedis.version>2.10.0</jedis.version>
+        <jedis.version>2.10.2</jedis.version>
         <log4jdbc.version>1.16</log4jdbc.version>
         <swagger.version>2.9.2</swagger.version>
         <fastjson.version>1.2.56</fastjson.version>
@@ -42,6 +42,18 @@
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-mongodb</artifactId>
+            <version>2.1.4.RELEASE</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.9.1</version>
+        </dependency>
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>

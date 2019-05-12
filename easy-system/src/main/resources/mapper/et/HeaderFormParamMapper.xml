@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msw.modules.et.mapper.HeaderFormParamMapper">
+  <resultMap id="BaseResultMap" type="com.msw.modules.et.entity.HeaderFormParam">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="okey" jdbcType="VARCHAR" property="okey" />
+    <result column="ovalue" jdbcType="VARCHAR" property="ovalue" />
+    <result column="api_id" jdbcType="BIGINT" property="api_id" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, okey, ovalue, api_id, description, `type`
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from tb_header_form
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_header_form
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insertData" parameterType="com.msw.modules.et.entity.HeaderFormParam" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_header_form (id, okey, ovalue, api_id, description, `type`)
+    values (#{id,jdbcType=BIGINT}, #{okey,jdbcType=VARCHAR}, #{ovalue,jdbcType=VARCHAR}, #{api_id,jdbcType=BIGINT},
+     #{description,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.msw.modules.et.entity.HeaderFormParam" keyProperty="id" useGeneratedKeys="true">
+    insert into tb_header_form
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="okey != null">
+        okey,
+      </if>
+      <if test="ovalue != null">
+        ovalue,
+      </if>
+      <if test="api_id != null">
+        api_id,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="okey != null">
+        #{okey,jdbcType=VARCHAR},
+      </if>
+      <if test="ovalue != null">
+        #{ovalue,jdbcType=VARCHAR},
+      </if>
+      <if test="api_id != null">
+        #{api_id,jdbcType=BIGINT},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>
