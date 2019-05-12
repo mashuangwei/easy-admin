@@ -26,6 +26,4 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>, J
      * @return
      */
     List<Permission> findByPid(long pid);
-
-    Set<Permission> findByRoles_Id(Long id);
 }

@@ -1,7 +1,7 @@
 package com.msw.config;
 
 import com.msw.modules.system.service.RoleService;
-import com.msw.utils.SecurityContextHolder;
+import com.msw.utils.SecurityUtils;
 import com.msw.modules.system.domain.Dept;
 import com.msw.modules.system.domain.Role;
 import com.msw.modules.system.domain.User;
@@ -35,7 +35,7 @@ public class DataScope {
 
     public Set<Long> getDeptIds() {
 
-        User user = userService.findByName(SecurityContextHolder.getUserDetails().getUsername());
+        User user = userService.findByName(SecurityUtils.getUsername());
 
         // 用于存储部门id
         Set<Long> deptIds = new HashSet<>();

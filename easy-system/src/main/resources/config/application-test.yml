@@ -130,3 +130,5 @@ mybatis-plus:
       banner: false
 generator:
   enabled: true
+swagger:
+  enabled: true

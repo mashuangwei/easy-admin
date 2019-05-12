@@ -13,10 +13,9 @@ import com.msw.service.VerificationCodeService;
 import com.msw.utils.ElAdminConstant;
 import com.msw.utils.EncryptUtils;
 import com.msw.utils.PageUtil;
-import com.msw.utils.SecurityContextHolder;
+import com.msw.utils.SecurityUtils;
 import com.msw.modules.system.domain.User;
 import com.msw.modules.system.service.DeptService;
-import com.msw.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -85,7 +84,7 @@ public class UserController {
             if(result.size() == 0){
                 return new ResponseEntity(PageUtil.toPage(null,0),HttpStatus.OK);
             } else return new ResponseEntity(userQueryService.queryAll(userDTO,result,pageable),HttpStatus.OK);
-        // 否则取并集
+            // 否则取并集
         } else {
             result.addAll(deptSet);
             result.addAll(deptIds);
@@ -126,11 +125,11 @@ public class UserController {
      */
     @GetMapping(value = "/users/validPass/{pass}")
     public ResponseEntity validPass(@PathVariable String pass){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
+        UserDetails userDetails = SecurityUtils.getUserDetails();
         Map map = new HashMap();
         map.put("status",200);
         if(!userDetails.getPassword().equals(EncryptUtils.encryptPassword(pass))){
-           map.put("status",400);
+            map.put("status",400);
         }
         return new ResponseEntity(map,HttpStatus.OK);
     }
@@ -142,7 +141,7 @@ public class UserController {
      */
     @GetMapping(value = "/users/updatePass/{pass}")
     public ResponseEntity updatePass(@PathVariable String pass){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
+        UserDetails userDetails = SecurityUtils.getUserDetails();
         if(userDetails.getPassword().equals(EncryptUtils.encryptPassword(pass))){
             throw new BadRequestException("新密码不能与旧密码相同");
         }
@@ -157,9 +156,8 @@ public class UserController {
      */
     @PostMapping(value = "/users/updateAvatar")
     public ResponseEntity updateAvatar(@RequestParam MultipartFile file){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
-        Picture picture = pictureService.upload(file,userDetails.getUsername());
-        userService.updateAvatar(userDetails.getUsername(),picture.getUrl());
+        Picture picture = pictureService.upload(file, SecurityUtils.getUsername());
+        userService.updateAvatar(SecurityUtils.getUsername(),picture.getUrl());
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -172,7 +170,7 @@ public class UserController {
     @Log("修改邮箱")
     @PostMapping(value = "/users/updateEmail/{code}")
     public ResponseEntity updateEmail(@PathVariable String code,@RequestBody User user){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
+        UserDetails userDetails = SecurityUtils.getUserDetails();
         if(!userDetails.getPassword().equals(EncryptUtils.encryptPassword(user.getPassword()))){
             throw new BadRequestException("密码错误");
         }

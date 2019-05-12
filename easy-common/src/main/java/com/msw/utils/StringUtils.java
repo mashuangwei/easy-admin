@@ -121,7 +121,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @param request
      * @return
      */
-        public static String getIP(HttpServletRequest request) {
+    public static String getIP(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
         if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");

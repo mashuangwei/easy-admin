@@ -3,7 +3,7 @@ package com.msw.modules.security.rest;
 import com.msw.aop.log.Log;
 import com.msw.modules.security.security.AuthenticationInfo;
 import com.msw.utils.EncryptUtils;
-import com.msw.utils.SecurityContextHolder;
+import com.msw.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import com.msw.modules.security.security.AuthorizationUser;
 import com.msw.modules.security.security.JwtUser;
@@ -70,8 +70,7 @@ public class AuthenticationController {
      */
     @GetMapping(value = "${jwt.auth.account}")
     public ResponseEntity getUserInfo(){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
-        JwtUser jwtUser = (JwtUser)userDetailsService.loadUserByUsername(userDetails.getUsername());
+        JwtUser jwtUser = (JwtUser)userDetailsService.loadUserByUsername(SecurityUtils.getUsername());
         return ResponseEntity.ok(jwtUser);
     }
 }

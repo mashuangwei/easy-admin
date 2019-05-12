@@ -3,7 +3,7 @@ package com.msw.rest;
 import com.msw.domain.Picture;
 import com.msw.service.PictureService;
 import com.msw.service.query.PictureQueryService;
-import com.msw.utils.SecurityContextHolder;
+import com.msw.utils.SecurityUtils;
 import com.msw.aop.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -47,8 +47,7 @@ public class PictureController {
     @PreAuthorize("hasAnyRole('ADMIN','PICTURE_ALL','PICTURE_UPLOAD')")
     @PostMapping(value = "/pictures")
     public ResponseEntity upload(@RequestParam MultipartFile file){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
-        String userName = userDetails.getUsername();
+        String userName = SecurityUtils.getUsername();
         Picture picture = pictureService.upload(file,userName);
         Map map = new HashMap();
         map.put("errno",0);

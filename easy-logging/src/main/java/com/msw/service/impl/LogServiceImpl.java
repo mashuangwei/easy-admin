@@ -5,7 +5,7 @@ import com.msw.domain.Log;
 import com.msw.repository.LogRepository;
 import com.msw.service.LogService;
 import com.msw.utils.RequestHolder;
-import com.msw.utils.SecurityContextHolder;
+import com.msw.utils.SecurityUtils;
 import com.msw.utils.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -66,8 +66,7 @@ public class LogServiceImpl implements LogService {
         log.setRequestIp(StringUtils.getIP(request));
 
         if(!LOGINPATH.equals(signature.getName())){
-            UserDetails userDetails = SecurityContextHolder.getUserDetails();
-            username = userDetails.getUsername();
+            username = SecurityUtils.getUsername();
         } else {
             try {
                 JSONObject jsonObject = new JSONObject(argValues[0]);

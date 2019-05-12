@@ -93,7 +93,9 @@ qiniu:
 #验证码有效时间/分钟
 code:
   expiration: 5
-
+#是否开启 swagger-ui
+swagger:
+  enabled: true
 #如果生产环境要开启swagger，需要配置请求地址
 #springfox:
 #  documentation:

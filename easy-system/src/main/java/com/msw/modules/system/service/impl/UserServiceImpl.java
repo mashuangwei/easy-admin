@@ -1,6 +1,7 @@
 package com.msw.modules.system.service.impl;
 
 import com.msw.exception.EntityNotFoundException;
+import com.msw.modules.monitor.service.RedisService;
 import com.msw.modules.system.repository.UserRepository;
 import com.msw.modules.system.service.mapper.UserMapper;
 import com.msw.utils.ValidationUtil;
@@ -28,6 +29,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RedisService redisService;
 
     @Override
     public UserDTO findById(long id) {
@@ -71,6 +75,14 @@ public class UserServiceImpl implements UserService {
 
         if(user2!=null&&!user.getId().equals(user2.getId())){
             throw new EntityExistException(User.class,"email",resources.getEmail());
+        }
+
+        // 如果用户的角色改变了，需要手动清理下缓存
+        if (!resources.getRoles().equals(user.getRoles())) {
+            String key = "role::loadPermissionByUser:" + user.getUsername();
+            redisService.delete(key);
+            key = "role::findByUsers_Id:" + user.getId();
+            redisService.delete(key);
         }
 
         user.setUsername(resources.getUsername());

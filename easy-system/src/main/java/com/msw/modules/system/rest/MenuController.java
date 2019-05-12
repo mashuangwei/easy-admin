@@ -9,7 +9,7 @@ import com.msw.modules.system.service.UserService;
 import com.msw.modules.system.service.dto.MenuDTO;
 import com.msw.modules.system.service.mapper.MenuMapper;
 import com.msw.modules.system.service.query.MenuQueryService;
-import com.msw.utils.SecurityContextHolder;
+import com.msw.utils.SecurityUtils;
 import com.msw.modules.system.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,8 +51,7 @@ public class MenuController {
      */
     @GetMapping(value = "/menus/build")
     public ResponseEntity buildMenus(){
-        UserDetails userDetails = SecurityContextHolder.getUserDetails();
-        User user = userService.findByName(userDetails.getUsername());
+        User user = userService.findByName(SecurityUtils.getUsername());
         List<MenuDTO> menuDTOList = menuService.findByRoles(roleService.findByUsers_Id(user.getId()));
         List<MenuDTO> menuDTOTree = (List<MenuDTO>)menuService.buildTree(menuDTOList).get("content");
         return new ResponseEntity(menuService.buildMenus(menuDTOTree),HttpStatus.OK);
