@@ -38,8 +38,6 @@ spring:
         pool-prepared-statements: true
         max-open-prepared-statements: 20
         max-pool-prepared-statement-per-connection-size: 20
-        # 配置监控统计拦截的filters
-        filters: stat # 注意这个值和druid原生不一致，默认启动了stat,wall
       primary: master_db
       datasource:
         master_db:
