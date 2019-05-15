@@ -8,6 +8,7 @@ import com.msw.modules.et.entity.App;
 import com.msw.modules.et.entity.TestWorks;
 import com.msw.modules.et.mapper.TestWorksMapper;
 import com.msw.modules.et.service.TestWorksService;
+import com.msw.utils.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -39,6 +40,9 @@ public class TestWorksServiceImpl extends ServiceImpl<TestWorksMapper, TestWorks
         QueryWrapper<TestWorks> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("create_time");
         queryWrapper.like("task_name", testWorks.getTaskName() == null ? "" : testWorks.getTaskName());
+        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin")){
+            queryWrapper.eq("createor", SecurityUtils.getUsername());
+        }
         return baseMapper.selectPage(page, queryWrapper);
     }
 
