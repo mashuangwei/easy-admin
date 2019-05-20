@@ -101,7 +101,7 @@ public class QiNiuServiceImpl implements QiNiuService {
             qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(file.getSize()+"")));
             return qiniuContentRepository.save(qiniuContent);
         } catch (Exception e) {
-           throw new BadRequestException(e.getMessage());
+            throw new BadRequestException(e.getMessage());
         }
     }
 
@@ -178,5 +178,12 @@ public class QiNiuServiceImpl implements QiNiuService {
             }
         }
 
+    }
+
+    @Override
+    public void deleteAll(Long[] ids, QiniuConfig config) {
+        for (Long id : ids) {
+            delete(findByContentId(id), config);
+        }
     }
 }

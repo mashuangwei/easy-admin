@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author mashuangwei
@@ -54,6 +55,9 @@ public interface RoleService {
      */
     @Cacheable(key = "'findByUsers_Id:' + #p0")
     List<Role> findByUsers_Id(Long id);
+
+    @Cacheable(keyGenerator = "keyGenerator")
+    Integer findByRoles(Set<Role> roles);
 
     /**
      * updatePermission

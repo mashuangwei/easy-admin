@@ -53,9 +53,6 @@ public class PictureQueryService {
             List<Predicate> list = new ArrayList<Predicate>();
 
             if(!ObjectUtils.isEmpty(picture.getFilename())){
-                /**
-                 * 模糊
-                 */
                 list.add(cb.like(root.get("filename").as(String.class),"%"+picture.getFilename()+"%"));
             }
 
