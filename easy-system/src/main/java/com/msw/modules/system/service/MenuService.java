@@ -2,7 +2,7 @@ package com.msw.modules.system.service;
 
 import com.msw.modules.system.domain.Menu;
 import com.msw.modules.system.service.dto.MenuDTO;
-import com.msw.modules.system.domain.Role;
+import com.msw.modules.system.service.dto.RoleSmallDTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -73,7 +73,7 @@ public interface MenuService {
      * @param roles
      * @return
      */
-    List<MenuDTO> findByRoles(List<Role> roles);
+    List<MenuDTO> findByRoles(List<RoleSmallDTO> roles);
 
     /**
      * buildMenus

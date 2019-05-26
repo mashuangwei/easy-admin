@@ -55,7 +55,7 @@ public class SwaggerConfig {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("easy-admin 接口文档")
-                .version("1.9")
+                .version("2.0")
                 .build();
     }
 

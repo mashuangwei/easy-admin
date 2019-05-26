@@ -1,15 +1,21 @@
 package com.msw.modules.security.service;
 
-import com.msw.exception.EntityNotFoundException;
+import com.msw.exception.BadRequestException;
+import com.msw.modules.system.domain.*;
 import com.msw.modules.security.security.JwtUser;
-import com.msw.modules.system.domain.User;
 import com.msw.modules.system.service.UserService;
+import com.msw.modules.system.service.dto.DeptDTO;
+import com.msw.modules.system.service.dto.JobDTO;
+import com.msw.modules.system.service.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Optional;
+
+import java.util.Optional;
 
 /**
  * @author mashuangwei
@@ -28,15 +34,15 @@ public class JwtUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username){
 
-        User user = userService.findByName(username);
+        UserDTO user = userService.findByName(username);
         if (user == null) {
-            throw new EntityNotFoundException(User.class, "name", username);
+            throw new BadRequestException("账号不存在");
         } else {
             return createJwtUser(user);
         }
     }
 
-    public UserDetails createJwtUser(User user) {
+    public UserDetails createJwtUser(UserDTO user) {
         return new JwtUser(
                 user.getId(),
                 user.getUsername(),
@@ -44,8 +50,8 @@ public class JwtUserDetailsService implements UserDetailsService {
                 user.getAvatar(),
                 user.getEmail(),
                 user.getPhone(),
-                user.getDept().getName(),
-                user.getJob().getName(),
+                Optional.ofNullable(user.getDept()).map(DeptDTO::getName).orElse(null),
+                Optional.ofNullable(user.getJob()).map(JobDTO::getName).orElse(null),
                 permissionService.mapToGrantedAuthorities(user),
                 user.getEnabled(),
                 user.getCreateTime(),

@@ -1,6 +1,6 @@
 package ${package}.service.mapper;
 
-import EntityMapper;
+import com.msw.mapper.EntityMapper;
 import ${package}.domain.${className};
 import ${package}.service.dto.${className}DTO;
 import org.mapstruct.Mapper;

@@ -7,6 +7,7 @@ import com.msw.modules.system.service.MenuService;
 import com.msw.modules.system.service.RoleService;
 import com.msw.modules.system.service.UserService;
 import com.msw.modules.system.service.dto.MenuDTO;
+import com.msw.modules.system.service.dto.UserDTO;
 import com.msw.modules.system.service.mapper.MenuMapper;
 import com.msw.modules.system.service.query.MenuQueryService;
 import com.msw.utils.SecurityUtils;
@@ -51,7 +52,7 @@ public class MenuController {
      */
     @GetMapping(value = "/menus/build")
     public ResponseEntity buildMenus(){
-        User user = userService.findByName(SecurityUtils.getUsername());
+        UserDTO user = userService.findByName(SecurityUtils.getUsername());
         List<MenuDTO> menuDTOList = menuService.findByRoles(roleService.findByUsers_Id(user.getId()));
         List<MenuDTO> menuDTOTree = (List<MenuDTO>)menuService.buildTree(menuDTOList).get("content");
         return new ResponseEntity(menuService.buildMenus(menuDTOTree),HttpStatus.OK);

@@ -1,5 +1,6 @@
 package com.msw.service.impl;
 
+import cn.hutool.core.lang.Dict;
 import cn.hutool.json.JSONObject;
 import com.msw.domain.Log;
 import com.msw.repository.LogRepository;
@@ -79,5 +80,10 @@ public class LogServiceImpl implements LogService {
         log.setUsername(username);
         log.setParams(params + " }");
         logRepository.save(log);
+    }
+
+    @Override
+    public Object findByErrDetail(Long id) {
+        return Dict.create().set("exception",logRepository.findExceptionById(id));
     }
 }

@@ -1,6 +1,8 @@
 package com.msw.modules.system.service.impl;
 
 import com.msw.modules.system.repository.RoleRepository;
+import com.msw.modules.system.service.dto.RoleSmallDTO;
+import com.msw.modules.system.service.mapper.RoleSmallMapper;
 import com.msw.utils.ValidationUtil;
 import com.msw.modules.system.domain.Menu;
 import com.msw.modules.system.domain.Role;
@@ -28,6 +30,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private RoleMapper roleMapper;
+
+    @Autowired
+    private RoleSmallMapper roleSmallMapper;
 
     @Override
     public RoleDTO findById(long id) {
@@ -99,8 +104,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> findByUsers_Id(Long id) {
-        return roleRepository.findByUsers_Id(id).stream().collect(Collectors.toList());
+    public List<RoleSmallDTO> findByUsers_Id(Long id) {
+        return roleSmallMapper.toDto(roleRepository.findByUsers_Id(id).stream().collect(Collectors.toList()));
     }
 
     @Override

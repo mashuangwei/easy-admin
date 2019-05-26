@@ -1,6 +1,6 @@
 package ${package}.service.query;
 
-import PageUtil;
+import com.msw.utils.PageUtil;
 import ${package}.domain.${className};
 import ${package}.service.dto.${className}DTO;
 import ${package}.repository.${className}Repository;
@@ -74,19 +74,19 @@ public class ${className}QueryService {
                 /**
                 * 模糊
                 */
-                list.add(cb.like(root.get("${column.columnName}").as(${column.columnType}.class),"%"+${changeClassName}.get${column.capitalColumnName}()+"%"));
+                list.add(cb.like(root.get("${column.changeColumnName}").as(${column.columnType}.class),"%"+${changeClassName}.get${column.capitalColumnName}()+"%"));
             </#if>
             <#if column.columnQuery = '2'>
                 /**
                 * 精确
                 */
-                list.add(cb.equal(root.get("${column.columnName}").as(${column.columnType}.class),${changeClassName}.get${column.capitalColumnName}()));
+                list.add(cb.equal(root.get("${column.changeColumnName}").as(${column.columnType}.class),${changeClassName}.get${column.capitalColumnName}()));
             </#if>
             }
     </#list>
 </#if>
-                Predicate[] p = new Predicate[list.size()];
-                return cb.and(list.toArray(p));
+            Predicate[] p = new Predicate[list.size()];
+            return cb.and(list.toArray(p));
         }
     }
 }

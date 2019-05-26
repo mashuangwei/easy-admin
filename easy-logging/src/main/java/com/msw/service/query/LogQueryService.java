@@ -2,6 +2,9 @@ package com.msw.service.query;
 
 import com.msw.domain.Log;
 import com.msw.repository.LogRepository;
+import com.msw.service.mapper.LogErrorMapper;
+import com.msw.service.mapper.LogSmallMapper;
+import com.msw.utils.PageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,7 +31,20 @@ public class LogQueryService {
     @Autowired
     private LogRepository logRepository;
 
-    public Page queryAll(Log log, Pageable pageable){
+    @Autowired
+    private LogErrorMapper logErrorMapper;
+
+    @Autowired
+    private LogSmallMapper logSmallMapper;
+
+    public Object queryAll(Log log, Pageable pageable){
+        Page<Log> page = logRepository.findAll(new Spec(log),pageable);
+        if (!ObjectUtils.isEmpty(log.getUsername())) {
+            return PageUtil.toPage(page.map(logSmallMapper::toDto));
+        }
+        if (log.getLogType().equals("ERROR")) {
+            return PageUtil.toPage(page.map(logErrorMapper::toDto));
+        }
         return logRepository.findAll(new Spec(log),pageable);
     }
 

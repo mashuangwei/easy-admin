@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Dict;
 import com.msw.aop.log.Log;
 import com.msw.exception.BadRequestException;
 import com.msw.modules.system.service.RoleService;
+import com.msw.modules.system.service.dto.RoleSmallDTO;
 import com.msw.modules.system.service.query.RoleQueryService;
 import com.msw.modules.system.domain.Role;
 import com.msw.utils.SecurityUtils;
@@ -68,7 +69,7 @@ public class RoleController {
 
     @GetMapping(value = "/roles/level")
     public ResponseEntity getLevel(){
-        List<Integer> levels = roleService.findByUsers_Id(SecurityUtils.getUserId()).stream().map(Role::getLevel).collect(Collectors.toList());
+        List<Integer> levels = roleService.findByUsers_Id(SecurityUtils.getUserId()).stream().map(RoleSmallDTO::getLevel).collect(Collectors.toList());
         return new ResponseEntity(Dict.create().set("level", Collections.min(levels)),HttpStatus.OK);
     }
 

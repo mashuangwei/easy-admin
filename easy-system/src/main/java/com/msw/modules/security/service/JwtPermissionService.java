@@ -4,6 +4,7 @@ package com.msw.modules.security.service;
 import com.msw.modules.system.domain.Role;
 import com.msw.modules.system.domain.User;
 import com.msw.modules.system.repository.RoleRepository;
+import com.msw.modules.system.service.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,7 +28,7 @@ public class JwtPermissionService {
      * @return
      */
     @Cacheable(key = "'loadPermissionByUser:' + #p0.username")
-    public Collection<GrantedAuthority> mapToGrantedAuthorities(User user) {
+    public Collection<GrantedAuthority> mapToGrantedAuthorities(UserDTO user) {
 
         System.out.println("--------------------loadPermissionByUser:" + user.getUsername() + "---------------------");
 

@@ -3,6 +3,7 @@ package com.msw.modules.system.service;
 import com.msw.modules.system.domain.Menu;
 import com.msw.modules.system.domain.Role;
 import com.msw.modules.system.service.dto.RoleDTO;
+import com.msw.modules.system.service.dto.RoleSmallDTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -54,7 +55,7 @@ public interface RoleService {
      * @return
      */
     @Cacheable(key = "'findByUsers_Id:' + #p0")
-    List<Role> findByUsers_Id(Long id);
+    List<RoleSmallDTO> findByUsers_Id(Long id);
 
     @Cacheable(keyGenerator = "keyGenerator")
     Integer findByRoles(Set<Role> roles);
