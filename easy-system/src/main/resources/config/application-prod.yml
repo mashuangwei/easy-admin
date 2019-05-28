@@ -1,13 +1,81 @@
 server:
   port: 8000
+
 #配置数据源
 spring:
+  data:
+    mongodb:
+      uri: mongodb://192.168.165.59:27017/test
+  datasource:
+    druid:
+      stat-view-servlet:
+        url-pattern: /druid/*
+        reset-enable: false
+        login-username: admin
+        login-password: 123456
+
+      web-stat-filter:
+        url-pattern: /*
+        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
+
+    dynamic:
+      druid: # 全局druid参数，绝大部分值和默认保持一致。(现已支持的参数如下,不清楚含义不要乱设置)
+        # 初始化连接大小
+        initial-size: 5
+        # 最小空闲连接数
+        min-idle: 5
+        max-active: 20
+        max-wait: 30000
+        # 可关闭的空闲连接间隔时间
+        time-between-eviction-runs-millis: 60000
+        # 配置连接在池中的最小生存时间
+        min-evictable-idle-time-millis: 300000
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        validation-query: select '1'
+        # 打开PSCache，并且指定每个连接上PSCache的大小
+        pool-prepared-statements: true
+        max-open-prepared-statements: 20
+        max-pool-prepared-statement-per-connection-size: 20
+      primary: master_db
+      datasource:
+        master_db:
+          username: root
+          password: msw12345
+          driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+          url: jdbc:log4jdbc:mysql://192.168.165.13:3306/master_db?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+        slave_db:
+          username: root
+          password: msw12345
+          driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+          url: jdbc:log4jdbc:mysql://192.168.165.13:3306/slave_db?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
+
+  jackson:
+    time-zone: GMT+8
+  #配置 Jpa
+  jpa:
+    hibernate:
+      # 生产环境设置成 none，避免程序运行时自动更新数据库结构
+      ddl-auto: update
+    #配置 Jpa
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: true
   redis:
     #数据库索引
     database: 0
-    host: 192.168.165.71
+    host: 192.168.165.13
     port: 6379
-    password:
+    password: 123456
+    lettuce:
+      pool:
+        max-active: 500
+        max-idle: 100
+        min-idle: 20
+        max-wait: -1
+      shutdown-timeout: 200
     jedis:
       pool:
         #最大连接数
@@ -20,85 +88,48 @@ spring:
         min-idle: 8
     #连接超时时间
     timeout: 5000
-  datasource:
-    druid:
-      type: com.alibaba.druid.pool.DruidDataSource
-      driverClassName: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
-      url: jdbc:log4jdbc:mysql://192.168.162.223:3306/eladmin?serverTimezone=Asia/Shanghai&characterEncoding=utf8&useSSL=false
-      username: root
-      password: root
+  http:
+    encoding:
+      charset: utf-8
+      enabled: true
+      force: true
 
-      # 初始化连接大小
-      initial-size: 5
-      # 最小空闲连接数
-      min-idle: 5
-      max-active: 20
-      max-wait: 30000
-      # 可关闭的空闲连接间隔时间
-      time-between-eviction-runs-millis: 60000
-      # 配置连接在池中的最小生存时间
-      min-evictable-idle-time-millis: 300000
-      validation-query: select '1' from dual
-      test-while-idle: true
-      test-on-borrow: false
-      test-on-return: false
-      # 打开PSCache，并且指定每个连接上PSCache的大小
-      pool-prepared-statements: true
-      max-open-prepared-statements: 20
-      max-pool-prepared-statement-per-connection-size: 20
-      # 配置监控统计拦截的filters
-      filters: stat
-
-      stat-view-servlet:
-        url-pattern: /druid/*
-        reset-enable: false
-        login-username: admin
-        login-password: 123456
-
-      web-stat-filter:
-        url-pattern: /*
-        exclusions: "*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*"
-
-  #配置 Jpa
-  jpa:
-    hibernate:
-      # 生产环境设置成 none，避免程序运行时自动更新数据库结构
-      ddl-auto: update
-    #配置 Jpa
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-    open-in-view: true
 #jwt
 jwt:
   header: Authorization
   secret: mySecret
   # token 过期时间 2个小时
   expiration: 7200000
+  #  expiration: 60000
   auth:
     # 授权路径
     path: /login
     # 获取用户信息
     account: /info
 
-#是否允许生成代码，生产环境设置为false
-generator:
-  enabled: true
-
 #七牛云
 qiniu:
   # 文件大小 /M
-  max-size: 15
+  max-size: 5
 
 #验证码有效时间/分钟
 code:
   expiration: 5
-#是否开启 swagger-ui
+
+mybatis-plus:
+  type-enums-package: com.msw.*.enums
+  mapper-locations: classpath*:mapper/**/*.xml  # MyBatis Mapper 所对应的 XML 文件位置，如果您在 Mapper 中有自定义方法（XML 中有自定义实现），需要进行该配置，告诉 Mapper 所对应的 XML 文件位置
+  type-aliases-package: com.msw.*.domain;com.msw.modules.*.domain  # MyBaits 别名包扫描路径，通过该属性可以给包中的类注册别名，注册后在 Mapper 对应的 XML 文件中可以直接使用类名，而不用使用全限定的类名（即 XML 中调用的时候不用包含包名）
+  configuration:
+    map-underscore-to-camel-case: false
+    call-setters-on-nulls: true
+    global-config:
+      db-config:
+        table-underline: true
+        field-strategy: not_empty
+        db-type: mysql
+      banner: false
+generator:
+  enabled: true
 swagger:
   enabled: true
-#如果生产环境要开启swagger，需要配置请求地址
-#springfox:
-#  documentation:
-#    swagger:
-#      v2:
-#        host: # 接口域名或外网ip
