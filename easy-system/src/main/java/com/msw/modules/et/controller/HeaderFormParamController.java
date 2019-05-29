@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * @description:
  */
 @RestController
-@RequestMapping("/hfb/param")
+@RequestMapping("/api/hfb/param")
 public class HeaderFormParamController {
 
     @Autowired

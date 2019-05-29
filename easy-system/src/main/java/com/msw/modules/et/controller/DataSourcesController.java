@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * @description:
  */
 @RestController
-@RequestMapping("/datasource")
+@RequestMapping("/api/datasource")
 public class DataSourcesController {
     @Autowired
     private DataSourcesService dataSourcesService;

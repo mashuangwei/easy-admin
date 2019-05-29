@@ -19,7 +19,7 @@ import java.util.List;
  * @description:
  */
 @RestController
-@RequestMapping("/app")
+@RequestMapping("/api/app")
 public class AppController {
 
     @Autowired

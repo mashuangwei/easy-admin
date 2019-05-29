@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @description:
  */
 @RestController
-@RequestMapping("/step")
+@RequestMapping("/api/step")
 public class StepController {
 
     @Autowired

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  * @description:
  */
 @RestController
-@RequestMapping("/case")
+@RequestMapping("/api/case")
 public class CaseController {
 
     @Autowired

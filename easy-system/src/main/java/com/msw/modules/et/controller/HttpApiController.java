@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
  * @description:
  */
 @RestController
-@RequestMapping("/httpapi")
+@RequestMapping("/api/httpapi")
 public class HttpApiController {
     @Autowired
     private HttpApiService httpApiService;
