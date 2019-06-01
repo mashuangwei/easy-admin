@@ -16,7 +16,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 @SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
 @EnableTransactionManagement
 @EnableWebSocketMessageBroker
-@MapperScan({"com.msw.*.*.mapper"})
+//@MapperScan({"com.msw.*.*.mapper"})
 public class AppRun {
 
     public static void main(String[] args) {
