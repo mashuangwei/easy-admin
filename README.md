@@ -24,9 +24,9 @@
 
 - JDK：8
 - IDE：IntelliJ IDEA （后端）
-- IDE：JetBrains WebStorm（前端）
+- IDE：IntelliJ IDEA（前端）
 - 依赖管理：Maven
-- 数据库：MySQL 5.6
+- 数据库：MySQL 5.7
 
 #### 功能模块
 ```
