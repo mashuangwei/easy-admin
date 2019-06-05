@@ -48,10 +48,15 @@ public class TestWorksController {
         return new ResponseEntity(PageUtil.toPage(testWorksService.query(page, testWorks)), HttpStatus.OK);
     }
 
+    @GetMapping("/query")
+    public ResponseEntity searchBy(TestWorks testWorks, Page page){
+        return new ResponseEntity(PageUtil.toPage(testWorksService.searchBy(page, testWorks)), HttpStatus.OK);
+    }
+
     @GetMapping("/query/all")
     public ResponseEntity query(){
         List<TestWorks> appList = testWorksService.queryAll();
         return new ResponseEntity(PageUtil.toPage(appList, appList.size()), HttpStatus.OK);
     }
-    
+
 }

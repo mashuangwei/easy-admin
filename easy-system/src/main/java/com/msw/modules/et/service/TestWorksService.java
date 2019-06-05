@@ -17,5 +17,7 @@ public interface TestWorksService extends IService<TestWorks> {
 
     IPage<TestWorks> query(Page<TestWorks> page, TestWorks testWorks);
 
+    IPage<TestWorks> searchBy(Page<TestWorks> page, TestWorks testWorks);
+
     List<TestWorks> queryAll();
 }

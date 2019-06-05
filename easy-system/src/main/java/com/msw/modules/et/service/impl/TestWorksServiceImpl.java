@@ -9,6 +9,7 @@ import com.msw.modules.et.entity.TestWorks;
 import com.msw.modules.et.mapper.TestWorksMapper;
 import com.msw.modules.et.service.TestWorksService;
 import com.msw.utils.SecurityUtils;
+import freemarker.template.utility.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -43,6 +44,32 @@ public class TestWorksServiceImpl extends ServiceImpl<TestWorksMapper, TestWorks
         if (!SecurityUtils.getUsername().equalsIgnoreCase("admin")){
             queryWrapper.eq("createor", SecurityUtils.getUsername());
         }
+        if (null != testWorks.getStatus() && testWorks.getStatus().equalsIgnoreCase("归档")) {
+            queryWrapper.eq("status", "归档");
+        }
+        return baseMapper.selectPage(page, queryWrapper);
+    }
+
+    @Override
+    public IPage<TestWorks> searchBy(Page<TestWorks> page, TestWorks testWorks) {
+        QueryWrapper<TestWorks> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderByDesc("create_time");
+        if (testWorks.getTaskName() != null) {
+            queryWrapper.like("task_name", testWorks.getTaskName());
+        }
+        if (testWorks.getStatus() != null) {
+            queryWrapper.like("status", testWorks.getStatus());
+        }
+
+        if (testWorks.getCreateor() != null) {
+            queryWrapper.like("createor", testWorks.getCreateor());
+        }
+
+        if (testWorks.getStartDate() != null && testWorks.getFinishDate() != null) {
+            queryWrapper.ge("start_date", testWorks.getStartDate());
+            queryWrapper.le("finish_date", testWorks.getFinishDate());
+        }
+
         return baseMapper.selectPage(page, queryWrapper);
     }
 
