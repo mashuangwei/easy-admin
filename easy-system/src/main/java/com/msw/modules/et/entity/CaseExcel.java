@@ -36,4 +36,7 @@ public class CaseExcel {
 
     @ExcelColumn(index = 0)
     private String case_order;
+
+    @ExcelColumn(index = 9, defaultValue = "1")
+    private Long work_id;
 }

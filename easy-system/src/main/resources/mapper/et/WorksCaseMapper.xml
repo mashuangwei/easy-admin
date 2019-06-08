@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.msw.modules.et.mapper.WorksCaseMapper">
+  <resultMap id="BaseResultMap" type="com.msw.modules.et.entity.WorksCase">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="pre_condition" jdbcType="VARCHAR" property="pre_condition" />
+    <result column="steps" jdbcType="VARCHAR" property="steps" />
+    <result column="expect_result" jdbcType="VARCHAR" property="expect_result" />
+    <result column="test_result" jdbcType="VARCHAR" property="test_result" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="module" jdbcType="VARCHAR" property="module" />
+    <result column="steps" jdbcType="VARCHAR" property="steps" />
+    <result column="case_order" jdbcType="INTEGER" property="case_order" />
+  </resultMap>
+
+  <insert id="batchInsert" parameterType="java.util.List">
+    INSERT INTO tb_work_case(`name`,pre_condition, steps, expect_result, test_result, note, `module`, case_order, work_id) VALUES
+    <foreach collection="list" item="caseexcel" index="index" separator=",">
+      (#{caseexcel.name},#{caseexcel.pre_condition},#{caseexcel.steps},#{caseexcel.expect_result},#{caseexcel.test_result},#{caseexcel.note},#{caseexcel.module},
+      #{caseexcel.case_order},#{caseexcel.work_id})
+    </foreach>
+  </insert>
+
+</mapper>

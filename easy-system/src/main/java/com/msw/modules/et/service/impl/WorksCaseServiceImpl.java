@@ -4,21 +4,27 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.msw.modules.et.entity.CaseExcel;
 import com.msw.modules.et.entity.TestWorks;
 import com.msw.modules.et.entity.WorksCase;
 import com.msw.modules.et.mapper.WorksCaseMapper;
 import com.msw.modules.et.service.WorksCaseService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 @Slf4j
 public class WorksCaseServiceImpl extends ServiceImpl<WorksCaseMapper, WorksCase> implements WorksCaseService {
+    @Autowired
+    private WorksCaseMapper worksCaseMapper;
+
     @Override
     public int add(WorksCase worksCase) {
         return baseMapper.insert(worksCase);
@@ -49,5 +55,10 @@ public class WorksCaseServiceImpl extends ServiceImpl<WorksCaseMapper, WorksCase
         }
 
         return baseMapper.selectPage(page, queryWrapper);
+    }
+
+    @Override
+    public void batchInsert(List<CaseExcel> caseList) {
+        worksCaseMapper.batchInsert(caseList);
     }
 }

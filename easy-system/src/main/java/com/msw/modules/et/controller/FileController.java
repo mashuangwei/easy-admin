@@ -2,9 +2,11 @@ package com.msw.modules.et.controller;
 
 import com.github.liaochong.myexcel.core.SaxExcelReader;
 import com.msw.modules.et.entity.CaseExcel;
+import com.msw.modules.et.service.WorksCaseService;
 import com.msw.modules.et.util.FileUtil;
 import com.msw.utils.PageUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ResourceUtils;
@@ -27,9 +29,11 @@ import java.util.UUID;
 @RequestMapping("/api/file")
 @Slf4j
 public class FileController {
+    @Autowired
+    private WorksCaseService worksCaseService;
 
     @PostMapping("/upload")
-    public ResponseEntity upload(@RequestParam("file") MultipartFile file){
+    public ResponseEntity upload(@RequestParam("file") MultipartFile file, @RequestParam("id") Long id){
         if (file.isEmpty()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
@@ -51,7 +55,10 @@ public class FileController {
                         .rowFilter(row -> row.getRowNum() > 0) // 如无需过滤，可省略该操作，0代表第一行
                         .read(inputStream);
                 System.err.println(result.toString());
-
+                for (int i = 0; i < result.size(); i++) {
+                    result.get(i).setWork_id(id);
+                }
+                worksCaseService.batchInsert(result);
             } catch (FileNotFoundException e){
                 log.error(e.toString());
             } finally {
