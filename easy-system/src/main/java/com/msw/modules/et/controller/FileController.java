@@ -33,7 +33,7 @@ public class FileController {
     private WorksCaseService worksCaseService;
 
     @PostMapping("/upload")
-    public ResponseEntity upload(@RequestParam("file") MultipartFile file, @RequestParam("id") Long id){
+    public ResponseEntity upload(@RequestParam("file") MultipartFile file, @RequestParam("id") Long id) {
         if (file.isEmpty()) {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
@@ -45,25 +45,29 @@ public class FileController {
             e.printStackTrace();
         }
 
-        if (FileUtil.saveFile(file, filepath)){
+        if (FileUtil.saveFile(file, filepath)) {
             File excelFile = new File(filepath);
             InputStream inputStream = null;
             try {
                 inputStream = new FileInputStream(excelFile);
                 List<CaseExcel> result = SaxExcelReader.of(CaseExcel.class)
-                        .sheet(0) // 0代表第一个，如果为0，可省略该操作
-                        .rowFilter(row -> row.getRowNum() > 0) // 如无需过滤，可省略该操作，0代表第一行
+                        .sheet(0)
+                        .rowFilter(row -> row.getRowNum() > 0)
                         .read(inputStream);
                 System.err.println(result.toString());
                 for (int i = 0; i < result.size(); i++) {
                     result.get(i).setWork_id(id);
                 }
                 worksCaseService.batchInsert(result);
-            } catch (FileNotFoundException e){
+            } catch (FileNotFoundException e) {
                 log.error(e.toString());
             } finally {
                 try {
                     inputStream.close();
+                    if (excelFile.exists() && excelFile.isFile()) {
+                        excelFile.delete();
+                    }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
