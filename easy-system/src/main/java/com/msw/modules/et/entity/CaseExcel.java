@@ -1,12 +1,7 @@
 package com.msw.modules.et.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.github.liaochong.myexcel.core.annotation.ExcelColumn;
 import lombok.Data;
-
-import java.util.Date;
 
 @Data
 public class CaseExcel {

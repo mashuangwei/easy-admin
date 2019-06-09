@@ -46,32 +46,6 @@ public class FileController {
         }
 
         if (FileUtil.saveFile(file, filepath)) {
-            File excelFile = new File(filepath);
-            InputStream inputStream = null;
-            try {
-                inputStream = new FileInputStream(excelFile);
-                List<CaseExcel> result = SaxExcelReader.of(CaseExcel.class)
-                        .sheet(0)
-                        .rowFilter(row -> row.getRowNum() > 0)
-                        .read(inputStream);
-                System.err.println(result.toString());
-                for (int i = 0; i < result.size(); i++) {
-                    result.get(i).setWork_id(id);
-                }
-                worksCaseService.batchInsert(result);
-            } catch (FileNotFoundException e) {
-                log.error(e.toString());
-            } finally {
-                try {
-                    inputStream.close();
-                    if (excelFile.exists() && excelFile.isFile()) {
-                        excelFile.delete();
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
             return new ResponseEntity(HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.BAD_REQUEST);
