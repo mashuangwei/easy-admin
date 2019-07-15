@@ -1,6 +1,7 @@
 package com.msw.modules.system.service;
 
 import com.msw.modules.system.domain.Menu;
+import com.msw.modules.system.service.dto.CommonQueryCriteria;
 import com.msw.modules.system.service.dto.MenuDTO;
 import com.msw.modules.system.service.dto.RoleSmallDTO;
 import org.springframework.cache.annotation.CacheConfig;
@@ -15,6 +16,14 @@ import java.util.Map;
  */
 @CacheConfig(cacheNames = "menu")
 public interface MenuService {
+
+    /**
+     * queryAll
+     * @param criteria
+     * @return
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    List<MenuDTO> queryAll(CommonQueryCriteria criteria);
 
     /**
      * get

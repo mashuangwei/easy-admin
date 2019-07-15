@@ -3,8 +3,10 @@ package com.msw.modules.system.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.msw.exception.BadRequestException;
 import com.msw.modules.system.repository.MenuRepository;
+import com.msw.modules.system.service.dto.CommonQueryCriteria;
 import com.msw.modules.system.service.dto.RoleSmallDTO;
 import com.msw.modules.system.service.mapper.MenuMapper;
+import com.msw.utils.QueryHelp;
 import com.msw.utils.ValidationUtil;
 import com.msw.modules.system.domain.Menu;
 import com.msw.modules.system.domain.Role;
@@ -29,6 +31,11 @@ public class MenuServiceImpl implements MenuService {
 
     @Autowired
     private MenuMapper menuMapper;
+
+    @Override
+    public List queryAll(CommonQueryCriteria criteria){
+        return menuMapper.toDto(menuRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
 
     @Override
     public MenuDTO findById(long id) {

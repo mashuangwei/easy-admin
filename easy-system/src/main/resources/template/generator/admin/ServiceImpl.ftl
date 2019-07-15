@@ -5,7 +5,7 @@ import ${package}.domain.${className};
     <#list columns as column>
         <#if column.columnKey = 'UNI'>
             <#if column_index = 1>
-import me.zhengjie.exception.EntityExistException;
+import com.msw.exception.EntityExistException;
             </#if>
         </#if>
     </#list>
@@ -14,6 +14,7 @@ import com.msw.utils.ValidationUtil;
 import ${package}.repository.${className}Repository;
 import ${package}.service.${className}Service;
 import ${package}.service.dto.${className}DTO;
+import ${package}.service.dto.${className}QueryCriteria;
 import ${package}.service.mapper.${className}Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,10 @@ import cn.hutool.core.util.IdUtil;
 <#if !auto && pkColumnType = 'String'>
 import cn.hutool.core.util.IdUtil;
 </#if>
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import com.msw.utils.PageUtil;
+import com.msw.utils.QueryHelp;
 
 /**
 * @author ${author}
@@ -41,6 +46,17 @@ public class ${className}ServiceImpl implements ${className}Service {
 
     @Autowired
     private ${className}Mapper ${changeClassName}Mapper;
+
+    @Override
+    public Object queryAll(${className}QueryCriteria criteria, Pageable pageable){
+        Page<${className}> page = ${changeClassName}Repository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+        return PageUtil.toPage(page.map(${changeClassName}Mapper::toDto));
+    }
+
+    @Override
+    public Object queryAll(${className}QueryCriteria criteria){
+        return ${changeClassName}Mapper.toDto(${changeClassName}Repository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
 
     @Override
     public ${className}DTO findById(${pkColumnType} ${pkChangeColName}) {
@@ -76,7 +92,6 @@ public class ${className}ServiceImpl implements ${className}Service {
     public void update(${className} resources) {
         Optional<${className}> optional${className} = ${changeClassName}Repository.findById(resources.get${pkCapitalColName}());
         ValidationUtil.isNull( optional${className},"${className}","id",resources.get${pkCapitalColName}());
-
         ${className} ${changeClassName} = optional${className}.get();
 <#if columns??>
     <#list columns as column>
@@ -91,9 +106,8 @@ public class ${className}ServiceImpl implements ${className}Service {
         </#if>
     </#list>
 </#if>
-        // 此处需自己修改
-        resources.set${pkCapitalColName}(${changeClassName}.get${pkCapitalColName}());
-        ${changeClassName}Repository.save(resources);
+        ${changeClassName}.copy(resources);
+        ${changeClassName}Repository.save(${changeClassName});
     }
 
     @Override

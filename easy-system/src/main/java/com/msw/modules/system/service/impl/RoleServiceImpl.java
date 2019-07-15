@@ -1,8 +1,11 @@
 package com.msw.modules.system.service.impl;
 
 import com.msw.modules.system.repository.RoleRepository;
+import com.msw.modules.system.service.dto.CommonQueryCriteria;
 import com.msw.modules.system.service.dto.RoleSmallDTO;
 import com.msw.modules.system.service.mapper.RoleSmallMapper;
+import com.msw.utils.PageUtil;
+import com.msw.utils.QueryHelp;
 import com.msw.utils.ValidationUtil;
 import com.msw.modules.system.domain.Menu;
 import com.msw.modules.system.domain.Role;
@@ -11,6 +14,8 @@ import com.msw.modules.system.service.RoleService;
 import com.msw.modules.system.service.dto.RoleDTO;
 import com.msw.modules.system.service.mapper.RoleMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +38,17 @@ public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private RoleSmallMapper roleSmallMapper;
+
+    @Override
+    public Object queryAll(Pageable pageable) {
+        return roleMapper.toDto(roleRepository.findAll(pageable).getContent());
+    }
+
+    @Override
+    public Object queryAll(CommonQueryCriteria criteria, Pageable pageable) {
+        Page<Role> page = roleRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+        return PageUtil.toPage(page.map(roleMapper::toDto));
+    }
 
     @Override
     public RoleDTO findById(long id) {

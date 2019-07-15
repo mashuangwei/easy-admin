@@ -1,14 +1,14 @@
-package com.msw.aop.limit;
+package com.msw.annotation;
+
 
 import com.msw.aspect.LimitType;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author jacky
+ * @author mashuangwei
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

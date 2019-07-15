@@ -5,6 +5,7 @@ import com.msw.exception.BadRequestException;
 import com.msw.modules.system.domain.DictDetail;
 import com.msw.modules.system.service.DictDetailService;
 import com.msw.modules.system.service.dto.DictDetailDTO;
+import com.msw.modules.system.service.dto.DictDetailQueryCriteria;
 import com.msw.modules.system.service.query.DictDetailQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
 * @author mashuangwei
@@ -27,16 +31,27 @@ public class DictDetailController {
     @Autowired
     private DictDetailService dictDetailService;
 
-    @Autowired
-    private DictDetailQueryService dictDetailQueryService;
-
     private static final String ENTITY_NAME = "dictDetail";
 
     @Log("查询字典详情")
     @GetMapping(value = "/dictDetail")
-    public ResponseEntity getDictDetails(DictDetailDTO resources,
+    public ResponseEntity getDictDetails(DictDetailQueryCriteria criteria,
                                          @PageableDefault(value = 10, sort = {"sort"}, direction = Sort.Direction.ASC) Pageable pageable){
-        return new ResponseEntity(dictDetailQueryService.queryAll(resources,pageable),HttpStatus.OK);
+        String[] names = criteria.getDictName().split(",");
+        return new ResponseEntity(dictDetailService.queryAll(criteria,pageable),HttpStatus.OK);
+    }
+
+    @Log("查询多个字典详情")
+    @GetMapping(value = "/dictDetail/map")
+    public ResponseEntity getDictDetailMaps(DictDetailQueryCriteria criteria,
+                                            @PageableDefault(value = 10, sort = {"sort"}, direction = Sort.Direction.ASC) Pageable pageable){
+        String[] names = criteria.getDictName().split(",");
+        Map map = new HashMap(names.length);
+        for (String name : names) {
+            criteria.setDictName(name);
+            map.put(name,dictDetailService.queryAll(criteria,pageable).get("content"));
+        }
+        return new ResponseEntity(map,HttpStatus.OK);
     }
 
     @Log("新增字典详情")

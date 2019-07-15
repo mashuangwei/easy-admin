@@ -16,22 +16,30 @@ public interface RedisService {
      * @param key
      * @return
      */
-    public Page findByKey(String key, Pageable pageable);
+    Page findByKey(String key, Pageable pageable);
 
     /**
-     * create
-     * @param redisVo
+     * 查询验证码的值
+     * @param key
+     * @return
      */
-    public void save(RedisVo redisVo);
+    String getCodeVal(String key);
+
+    /**
+     * 保存验证码
+     * @param key
+     * @param val
+     */
+    void saveCode(String key, Object val);
 
     /**
      * delete
      * @param key
      */
-    public void delete(String key);
+    void delete(String key);
 
     /**
      * 清空所有缓存
      */
-    public void flushdb();
+    void flushdb();
 }

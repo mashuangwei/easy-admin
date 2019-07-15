@@ -2,9 +2,11 @@ package com.msw.modules.system.service;
 
 import com.msw.modules.system.service.dto.UserDTO;
 import com.msw.modules.system.domain.User;
+import com.msw.modules.system.service.dto.UserQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 
 /**
  * @author mashuangwei
@@ -74,4 +76,7 @@ public interface UserService {
      */
     @CacheEvict(allEntries = true)
     void updateEmail(String username, String email);
+
+    @Cacheable(keyGenerator = "keyGenerator")
+    Object queryAll(UserQueryCriteria criteria, Pageable pageable);
 }

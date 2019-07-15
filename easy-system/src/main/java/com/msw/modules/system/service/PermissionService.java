@@ -1,5 +1,6 @@
 package com.msw.modules.system.service;
 
+import com.msw.modules.system.service.dto.CommonQueryCriteria;
 import com.msw.modules.system.service.dto.PermissionDTO;
 import com.msw.modules.system.domain.Permission;
 import org.springframework.cache.annotation.CacheConfig;
@@ -67,4 +68,12 @@ public interface PermissionService {
      */
     @Cacheable(keyGenerator = "keyGenerator")
     Object buildTree(List<PermissionDTO> permissionDTOS);
+
+    /**
+     * queryAll
+     * @param criteria
+     * @return
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    List<PermissionDTO> queryAll(CommonQueryCriteria criteria);
 }

@@ -1,9 +1,16 @@
 package com.msw.modules.security.rest;
 
+import cn.hutool.core.codec.Base64;
+import cn.hutool.core.util.IdUtil;
 import com.msw.aop.log.Log;
+import com.msw.exception.BadRequestException;
+import com.msw.modules.monitor.service.RedisService;
 import com.msw.modules.security.security.AuthenticationInfo;
+import com.msw.modules.security.security.ImgResult;
+import com.msw.modules.security.utils.VerifyCodeUtils;
 import com.msw.utils.EncryptUtils;
 import com.msw.utils.SecurityUtils;
+import com.msw.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import com.msw.modules.security.security.AuthorizationUser;
 import com.msw.modules.security.security.JwtUser;
@@ -18,12 +25,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 /**
  * @author mashuangwei
  * @date 2018-11-23
  * 授权、根据token获取用户详细信息
  */
-@Slf4j
 @RestController
 @RequestMapping("auth")
 public class AuthenticationController {
@@ -33,6 +43,9 @@ public class AuthenticationController {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private RedisService redisService;
 
     @Autowired
     @Qualifier("jwtUserDetailsService")
@@ -47,6 +60,16 @@ public class AuthenticationController {
     @PostMapping(value = "${jwt.auth.path}")
     public ResponseEntity login(@Validated @RequestBody AuthorizationUser authorizationUser){
 
+        // 查询验证码
+        String code = redisService.getCodeVal(authorizationUser.getUuid());
+        // 清除验证码
+        redisService.delete(authorizationUser.getUuid());
+        if (StringUtils.isBlank(code)) {
+            throw new BadRequestException("验证码已过期");
+        }
+        if (StringUtils.isBlank(authorizationUser.getCode()) || !authorizationUser.getCode().equalsIgnoreCase(code)) {
+            throw new BadRequestException("验证码错误");
+        }
         final JwtUser jwtUser = (JwtUser) userDetailsService.loadUserByUsername(authorizationUser.getUsername());
 
         if(!jwtUser.getPassword().equals(EncryptUtils.encryptPassword(authorizationUser.getPassword()))){
@@ -72,5 +95,29 @@ public class AuthenticationController {
     public ResponseEntity getUserInfo(){
         JwtUser jwtUser = (JwtUser)userDetailsService.loadUserByUsername(SecurityUtils.getUsername());
         return ResponseEntity.ok(jwtUser);
+    }
+
+    /**
+     * 获取验证码
+     */
+    @GetMapping(value = "vCode")
+    public ImgResult getCode(HttpServletResponse response) throws IOException {
+
+        //生成随机字串
+        String verifyCode = VerifyCodeUtils.generateVerifyCode(4);
+        String uuid = IdUtil.simpleUUID();
+        redisService.saveCode(uuid,verifyCode);
+        // 生成图片
+        int w = 111, h = 36;
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        VerifyCodeUtils.outputImage(w, h, stream, verifyCode);
+        try {
+            return new ImgResult(Base64.encode(stream.toByteArray()),uuid);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            stream.close();
+        }
     }
 }

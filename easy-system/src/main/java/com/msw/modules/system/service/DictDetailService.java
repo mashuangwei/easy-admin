@@ -2,9 +2,13 @@ package com.msw.modules.system.service;
 
 import com.msw.modules.system.domain.DictDetail;
 import com.msw.modules.system.service.dto.DictDetailDTO;
+import com.msw.modules.system.service.dto.DictDetailQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
+
+import java.util.Map;
 
 /**
 * @author mashuangwei
@@ -42,4 +46,7 @@ public interface DictDetailService {
      */
     @CacheEvict(allEntries = true)
     void delete(Long id);
+
+    @Cacheable(keyGenerator = "keyGenerator")
+    Map queryAll(DictDetailQueryCriteria criteria, Pageable pageable);
 }

@@ -1,10 +1,9 @@
 package com.msw.modules.monitor.rest;
 
-import com.msw.aop.limit.Limit;
+import com.msw.annotation.Limit;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

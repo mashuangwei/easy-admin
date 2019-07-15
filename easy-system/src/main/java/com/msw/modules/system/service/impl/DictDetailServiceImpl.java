@@ -3,13 +3,20 @@ package com.msw.modules.system.service.impl;
 import com.msw.modules.system.domain.DictDetail;
 import com.msw.modules.system.repository.DictDetailRepository;
 import com.msw.modules.system.service.DictDetailService;
+import com.msw.modules.system.service.dto.DictDetailQueryCriteria;
+import com.msw.utils.PageUtil;
+import com.msw.utils.QueryHelp;
 import com.msw.utils.ValidationUtil;
 import com.msw.modules.system.service.dto.DictDetailDTO;
 import com.msw.modules.system.service.mapper.DictDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -25,6 +32,12 @@ public class DictDetailServiceImpl implements DictDetailService {
 
     @Autowired
     private DictDetailMapper dictDetailMapper;
+
+    @Override
+    public Map queryAll(DictDetailQueryCriteria criteria, Pageable pageable) {
+        Page<DictDetail> page = dictDetailRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+        return PageUtil.toPage(page.map(dictDetailMapper::toDto));
+    }
 
     @Override
     public DictDetailDTO findById(Long id) {
@@ -44,9 +57,7 @@ public class DictDetailServiceImpl implements DictDetailService {
     public void update(DictDetail resources) {
         Optional<DictDetail> optionalDictDetail = dictDetailRepository.findById(resources.getId());
         ValidationUtil.isNull( optionalDictDetail,"DictDetail","id",resources.getId());
-
         DictDetail dictDetail = optionalDictDetail.get();
-        // 此处需自己修改
         resources.setId(dictDetail.getId());
         dictDetailRepository.save(resources);
     }

@@ -5,12 +5,15 @@ import cn.hutool.json.JSONObject;
 import com.msw.domain.Log;
 import com.msw.repository.LogRepository;
 import com.msw.service.LogService;
-import com.msw.utils.RequestHolder;
-import com.msw.utils.SecurityUtils;
-import com.msw.utils.StringUtils;
+import com.msw.service.dto.LogQueryCriteria;
+import com.msw.service.mapper.LogErrorMapper;
+import com.msw.service.mapper.LogSmallMapper;
+import com.msw.utils.*;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -29,14 +32,33 @@ public class LogServiceImpl implements LogService {
     @Autowired
     private LogRepository logRepository;
 
+    @Autowired
+    private LogErrorMapper logErrorMapper;
+
+    @Autowired
+    private LogSmallMapper logSmallMapper;
+
     private final String LOGINPATH = "login";
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void save(ProceedingJoinPoint joinPoint, Log log){
+    public Object queryAll(LogQueryCriteria criteria, Pageable pageable){
+        Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)),pageable);
+        if ("ERROR".equals(criteria.getLogType())) {
+            return PageUtil.toPage(page.map(logErrorMapper::toDto));
+        }
+        return page;
+    }
 
-        // 获取request
-        HttpServletRequest request = RequestHolder.getHttpServletRequest();
+    @Override
+    public Object queryAllByUser(LogQueryCriteria criteria, Pageable pageable) {
+        Page<Log> page = logRepository.findAll(((root, criteriaQuery, cb) -> QueryHelp.getPredicate(root, criteria, cb)),pageable);
+        return PageUtil.toPage(page.map(logSmallMapper::toDto));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void save(String username, String ip, ProceedingJoinPoint joinPoint, Log log){
+
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
         com.msw.aop.log.Log aopLog = method.getAnnotation(com.msw.aop.log.Log.class);
@@ -54,9 +76,6 @@ public class LogServiceImpl implements LogService {
         Object[] argValues = joinPoint.getArgs();
         //参数名称
         String[] argNames = ((MethodSignature)joinPoint.getSignature()).getParameterNames();
-        // 用户名
-        String username = "";
-
         if(argValues != null){
             for (int i = 0; i < argValues.length; i++) {
                 params += " " + argNames[i] + ": " + argValues[i];
@@ -64,11 +83,9 @@ public class LogServiceImpl implements LogService {
         }
 
         // 获取IP地址
-        log.setRequestIp(StringUtils.getIP(request));
+        log.setRequestIp(ip);
 
-        if(!LOGINPATH.equals(signature.getName())){
-            username = SecurityUtils.getUsername();
-        } else {
+        if(LOGINPATH.equals(signature.getName())){
             try {
                 JSONObject jsonObject = new JSONObject(argValues[0]);
                 username = jsonObject.get("username").toString();

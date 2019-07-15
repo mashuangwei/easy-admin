@@ -2,11 +2,13 @@ package com.msw.modules.system.service;
 
 import com.msw.modules.system.domain.Menu;
 import com.msw.modules.system.domain.Role;
+import com.msw.modules.system.service.dto.CommonQueryCriteria;
 import com.msw.modules.system.service.dto.RoleDTO;
 import com.msw.modules.system.service.dto.RoleSmallDTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Set;
@@ -78,4 +80,19 @@ public interface RoleService {
 
     @CacheEvict(allEntries = true)
     void untiedMenu(Menu menu);
+
+    /**
+     * queryAll
+     * @param pageable
+     * @return
+     */
+    Object queryAll(Pageable pageable);
+
+    /**
+     * queryAll
+     * @param pageable
+     * @param criteria
+     * @return
+     */
+    Object queryAll(CommonQueryCriteria criteria, Pageable pageable);
 }

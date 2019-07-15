@@ -1,9 +1,11 @@
 package com.msw.modules.quartz.service;
 
 import com.msw.modules.quartz.domain.QuartzJob;
+import com.msw.modules.system.service.dto.JobQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 
 /**
  * @author mashuangwei
@@ -11,6 +13,23 @@ import org.springframework.cache.annotation.Cacheable;
  */
 @CacheConfig(cacheNames = "quartzJob")
 public interface QuartzJobService {
+
+    /**
+     * queryAll quartzJob
+     * @param criteria
+     * @param pageable
+     * @return
+     */
+    @Cacheable(keyGenerator = "keyGenerator")
+    Object queryAll(JobQueryCriteria criteria, Pageable pageable);
+
+    /**
+     * queryAll quartzLog
+     * @param criteria
+     * @param pageable
+     * @return
+     */
+    Object queryAllLog(JobQueryCriteria criteria, Pageable pageable);
 
     /**
      * create

@@ -3,6 +3,7 @@ package com.msw.modules.system.rest;
 import com.msw.aop.log.Log;
 import com.msw.exception.BadRequestException;
 import com.msw.modules.system.service.PermissionService;
+import com.msw.modules.system.service.dto.CommonQueryCriteria;
 import com.msw.modules.system.service.dto.PermissionDTO;
 import com.msw.modules.system.service.query.PermissionQueryService;
 import com.msw.modules.system.domain.Permission;
@@ -26,9 +27,6 @@ public class PermissionController {
     @Autowired
     private PermissionService permissionService;
 
-    @Autowired
-    private PermissionQueryService permissionQueryService;
-
     private static final String ENTITY_NAME = "permission";
 
     /**
@@ -44,8 +42,8 @@ public class PermissionController {
     @Log("查询权限")
     @GetMapping(value = "/permissions")
     @PreAuthorize("hasAnyRole('ADMIN','PERMISSION_ALL','PERMISSION_SELECT')")
-    public ResponseEntity getPermissions(@RequestParam(required = false) String name){
-        List<PermissionDTO> permissionDTOS = permissionQueryService.queryAll(name);
+    public ResponseEntity getPermissions(CommonQueryCriteria criteria){
+        List<PermissionDTO> permissionDTOS = permissionService.queryAll(criteria);
         return new ResponseEntity(permissionService.buildTree(permissionDTOS),HttpStatus.OK);
     }
 

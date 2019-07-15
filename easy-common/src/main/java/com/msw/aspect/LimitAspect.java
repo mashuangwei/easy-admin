@@ -1,7 +1,7 @@
 package com.msw.aspect;
 
 import com.google.common.collect.ImmutableList;
-import com.msw.aop.limit.Limit;
+import com.msw.annotation.Limit;
 import com.msw.exception.BadRequestException;
 import com.msw.utils.RequestHolder;
 import com.msw.utils.StringUtils;
@@ -28,7 +28,7 @@ public class LimitAspect {
     private static final Logger logger = LoggerFactory.getLogger(LimitAspect.class);
 
 
-    @Pointcut("@annotation(com.msw.aop.limit.Limit)")
+    @Pointcut("@annotation(com.msw.annotation.Limit)")
     public void pointcut() {
     }
 
@@ -39,7 +39,6 @@ public class LimitAspect {
         Method signatureMethod = signature.getMethod();
         Limit limit = signatureMethod.getAnnotation(Limit.class);
         LimitType limitType = limit.limitType();
-        String name = limit.name();
         String key = limit.key();
         if (StringUtils.isEmpty(key)) {
             switch (limitType) {

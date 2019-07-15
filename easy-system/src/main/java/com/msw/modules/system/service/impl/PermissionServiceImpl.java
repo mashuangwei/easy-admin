@@ -2,8 +2,10 @@ package com.msw.modules.system.service.impl;
 
 import com.msw.exception.BadRequestException;
 import com.msw.modules.system.repository.PermissionRepository;
+import com.msw.modules.system.service.dto.CommonQueryCriteria;
 import com.msw.modules.system.service.dto.PermissionDTO;
 import com.msw.modules.system.service.mapper.PermissionMapper;
+import com.msw.utils.QueryHelp;
 import com.msw.utils.ValidationUtil;
 import com.msw.modules.system.domain.Permission;
 import com.msw.exception.EntityExistException;
@@ -27,6 +29,11 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Autowired
     private PermissionMapper permissionMapper;
+
+    @Override
+    public List<PermissionDTO> queryAll(CommonQueryCriteria criteria) {
+        return permissionMapper.toDto(permissionRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
 
     @Override
     public PermissionDTO findById(long id) {

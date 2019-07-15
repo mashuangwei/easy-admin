@@ -6,17 +6,15 @@ import com.msw.modules.system.domain.Menu;
 import com.msw.modules.system.service.MenuService;
 import com.msw.modules.system.service.RoleService;
 import com.msw.modules.system.service.UserService;
+import com.msw.modules.system.service.dto.CommonQueryCriteria;
 import com.msw.modules.system.service.dto.MenuDTO;
 import com.msw.modules.system.service.dto.UserDTO;
-import com.msw.modules.system.service.mapper.MenuMapper;
-import com.msw.modules.system.service.query.MenuQueryService;
 import com.msw.utils.SecurityUtils;
-import com.msw.modules.system.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -33,16 +31,10 @@ public class MenuController {
     private MenuService menuService;
 
     @Autowired
-    private MenuQueryService menuQueryService;
-
-    @Autowired
     private UserService userService;
 
     @Autowired
     private RoleService roleService;
-
-    @Autowired
-    private MenuMapper menuMapper;
 
     private static final String ENTITY_NAME = "menu";
 
@@ -71,8 +63,8 @@ public class MenuController {
     @Log("查询菜单")
     @GetMapping(value = "/menus")
     @PreAuthorize("hasAnyRole('ADMIN','MENU_ALL','MENU_SELECT')")
-    public ResponseEntity getMenus(@RequestParam(required = false) String name){
-        List<MenuDTO> menuDTOList = menuQueryService.queryAll(name);
+    public ResponseEntity getMenus(CommonQueryCriteria criteria){
+        List<MenuDTO> menuDTOList = menuService.queryAll(criteria);
         return new ResponseEntity(menuService.buildTree(menuDTOList),HttpStatus.OK);
     }
 

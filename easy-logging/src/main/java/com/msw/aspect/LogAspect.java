@@ -3,6 +3,9 @@ package com.msw.aspect;
 import com.msw.domain.Log;
 import com.msw.exception.BadRequestException;
 import com.msw.service.LogService;
+import com.msw.utils.RequestHolder;
+import com.msw.utils.SecurityUtils;
+import com.msw.utils.StringUtils;
 import com.msw.utils.ThrowableUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -47,7 +50,7 @@ public class LogAspect {
         currentTime = System.currentTimeMillis();
         result = joinPoint.proceed();
         Log log = new Log("INFO",System.currentTimeMillis() - currentTime);
-        logService.save(joinPoint, log);
+        logService.save(getUsername(), StringUtils.getIP(RequestHolder.getHttpServletRequest()),joinPoint, log);
         return result;
     }
 
@@ -60,7 +63,15 @@ public class LogAspect {
     @AfterThrowing(pointcut = "logPointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
         Log log = new Log("ERROR",System.currentTimeMillis() - currentTime);
-        log.setExceptionDetail(ThrowableUtil.getStackTrace(e));
-        logService.save((ProceedingJoinPoint)joinPoint, log);
+        log.setExceptionDetail(ThrowableUtil.getStackTrace(e).getBytes());
+        logService.save(getUsername(), StringUtils.getIP(RequestHolder.getHttpServletRequest()), (ProceedingJoinPoint)joinPoint, log);
+    }
+
+    public String getUsername() {
+        try {
+            return SecurityUtils.getUsername();
+        }catch (Exception e){
+            return "";
+        }
     }
 }

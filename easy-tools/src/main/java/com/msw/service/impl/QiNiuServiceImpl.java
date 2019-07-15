@@ -4,7 +4,10 @@ import com.google.gson.Gson;
 import com.msw.exception.BadRequestException;
 import com.msw.repository.QiNiuConfigRepository;
 import com.msw.repository.QiniuContentRepository;
+import com.msw.service.dto.QiniuQueryCriteria;
 import com.msw.utils.FileUtil;
+import com.msw.utils.PageUtil;
+import com.msw.utils.QueryHelp;
 import com.msw.utils.ValidationUtil;
 import com.qiniu.common.QiniuException;
 import com.qiniu.http.Response;
@@ -20,6 +23,7 @@ import com.msw.service.QiNiuService;
 import com.msw.util.QiNiuUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +49,11 @@ public class QiNiuServiceImpl implements QiNiuService {
     private Long maxSize;
 
     private final String TYPE = "公开";
+
+    @Override
+    public Object queryAll(QiniuQueryCriteria criteria, Pageable pageable){
+        return PageUtil.toPage(qiniuContentRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable));
+    }
 
     @Override
     public QiniuConfig find() {

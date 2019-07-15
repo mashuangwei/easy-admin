@@ -2,6 +2,7 @@ package com.msw.rest;
 
 import com.msw.domain.Picture;
 import com.msw.service.PictureService;
+import com.msw.service.dto.PictureQueryCriteria;
 import com.msw.service.query.PictureQueryService;
 import com.msw.utils.SecurityUtils;
 import com.msw.aop.log.Log;
@@ -10,14 +11,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author 郑杰
+ * @author mashuangwei
  * @date 2018/09/20 14:13:32
  */
 @RestController
@@ -27,14 +27,11 @@ public class PictureController {
     @Autowired
     private PictureService pictureService;
 
-    @Autowired
-    private PictureQueryService pictureQueryService;
-
     @Log("查询图片")
     @PreAuthorize("hasAnyRole('ADMIN','PICTURE_ALL','PICTURE_SELECT')")
     @GetMapping(value = "/pictures")
-    public ResponseEntity getRoles(Picture resources, Pageable pageable){
-        return new ResponseEntity(pictureQueryService.queryAll(resources,pageable),HttpStatus.OK);
+    public ResponseEntity getRoles(PictureQueryCriteria criteria, Pageable pageable){
+        return new ResponseEntity(pictureService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
     /**
@@ -49,7 +46,7 @@ public class PictureController {
     public ResponseEntity upload(@RequestParam MultipartFile file){
         String userName = SecurityUtils.getUsername();
         Picture picture = pictureService.upload(file,userName);
-        Map map = new HashMap();
+        Map map = new HashMap(3);
         map.put("errno",0);
         map.put("id",picture.getId());
         map.put("data",new String[]{picture.getUrl()});

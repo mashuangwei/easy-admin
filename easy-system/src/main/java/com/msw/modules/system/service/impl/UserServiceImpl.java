@@ -3,13 +3,18 @@ package com.msw.modules.system.service.impl;
 import com.msw.exception.EntityNotFoundException;
 import com.msw.modules.monitor.service.RedisService;
 import com.msw.modules.system.repository.UserRepository;
+import com.msw.modules.system.service.dto.UserQueryCriteria;
 import com.msw.modules.system.service.mapper.UserMapper;
+import com.msw.utils.PageUtil;
+import com.msw.utils.QueryHelp;
 import com.msw.utils.ValidationUtil;
 import com.msw.modules.system.domain.User;
 import com.msw.exception.EntityExistException;
 import com.msw.modules.system.service.UserService;
 import com.msw.modules.system.service.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +37,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RedisService redisService;
+
+    @Override
+    public Object queryAll(UserQueryCriteria criteria, Pageable pageable) {
+        Page<User> page = userRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
+        return PageUtil.toPage(page.map(userMapper::toDto));
+    }
 
     @Override
     public UserDTO findById(long id) {
