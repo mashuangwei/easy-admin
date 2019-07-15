@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -61,4 +62,7 @@ public class TestWorks implements Serializable {
     private Date create_time;
 
     private String createor;
+
+    private String tester;
+
 }
