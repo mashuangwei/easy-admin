@@ -64,9 +64,9 @@ spring:
   redis:
     #数据库索引
     database: 0
-    host: 192.168.165.71
+    host: 192.168.165.13
     port: 6379
-    password:
+    password: 123456
     lettuce:
       pool:
         max-active: 500

@@ -22,6 +22,9 @@ public class UserQueryCriteria implements Serializable {
     private String username;
 
     @Query(type = Query.Type.INNER_LIKE)
+    private String chinaName;
+
+    @Query(type = Query.Type.INNER_LIKE)
     private String email;
 
     @Query

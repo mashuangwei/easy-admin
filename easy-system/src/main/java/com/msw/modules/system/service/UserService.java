@@ -70,6 +70,14 @@ public interface UserService {
     void updateAvatar(String username, String url);
 
     /**
+     * 修改中文名字
+     * @param username
+     * @param name
+     */
+    @CacheEvict(allEntries = true)
+    void updateName(String username, String name);
+
+    /**
      * 修改邮箱
      * @param username
      * @param email

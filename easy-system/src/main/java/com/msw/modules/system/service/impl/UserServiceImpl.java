@@ -97,6 +97,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setUsername(resources.getUsername());
+        user.setChinaName(resources.getChinaName());
         user.setEmail(resources.getEmail());
         user.setEnabled(resources.getEnabled());
         user.setRoles(resources.getRoles());
@@ -137,6 +138,11 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void updateAvatar(String username, String url) {
         userRepository.updateAvatar(username,url);
+    }
+
+    @Override
+    public void updateName(String username, String chinaName) {
+        userRepository.updateName(username, chinaName);
     }
 
     @Override

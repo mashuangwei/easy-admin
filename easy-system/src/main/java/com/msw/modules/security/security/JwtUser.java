@@ -23,6 +23,8 @@ public class JwtUser implements UserDetails {
 
     private final String username;
 
+    private final String chinaName;
+
     @JsonIgnore
     private final String password;
 

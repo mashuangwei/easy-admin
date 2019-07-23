@@ -43,6 +43,7 @@ public class JwtUserDetailsService implements UserDetailsService {
         return new JwtUser(
                 user.getId(),
                 user.getUsername(),
+                user.getChinaName(),
                 user.getPassword(),
                 user.getAvatar(),
                 user.getEmail(),

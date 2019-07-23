@@ -34,6 +34,9 @@ public class User implements Serializable {
 
     private String avatar;
 
+    @Column(name = "china_name")
+    private String chinaName;
+
     @NotBlank
     @Pattern(regexp = "([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}",message = "格式错误")
     private String email;
@@ -76,6 +79,7 @@ public class User implements Serializable {
                 ", password='" + password + '\'' +
                 ", createTime=" + createTime +
                 ", lastPasswordResetTime=" + lastPasswordResetTime +
+                ", chinaName=" + chinaName +
                 '}';
     }
 
