@@ -1,11 +1,14 @@
 package com.msw.modules.system.repository;
 
 import com.msw.modules.system.domain.User;
+import com.msw.modules.system.domain.vo.UserVo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author mashuangwei
@@ -19,6 +22,9 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      * @return
      */
     User findByUsername(String username);
+
+    @Query(value = "select * from user as u where dept_id=( select dept_id from user where id = ?1)",nativeQuery = true)
+    List<User> findUsersById(Long id);
 
     /**
      * findByEmail

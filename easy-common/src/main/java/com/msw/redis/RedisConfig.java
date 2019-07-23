@@ -60,10 +60,11 @@ public class RedisConfig extends CachingConfigurerSupport {
         // 建议使用这种方式，小范围指定白名单
         ParserConfig.getGlobalInstance().addAccept("com.msw.domain");
         ParserConfig.getGlobalInstance().addAccept("com.msw.modules.system.service.dto");
-        ParserConfig.getGlobalInstance().addAccept("com.msw.modules.system.domain");
+        ParserConfig.getGlobalInstance().addAccept("com.msw.modules.system.domain.vo");
         ParserConfig.getGlobalInstance().addAccept("com.msw.modules.quartz.domain");
         ParserConfig.getGlobalInstance().addAccept("com.msw.modules.monitor.domain");
         ParserConfig.getGlobalInstance().addAccept("com.msw.modules.security.security");
+        ParserConfig.getGlobalInstance().addAccept("com.msw.modules.system.domain");
         // key的序列化采用StringRedisSerializer
         template.setKeySerializer(new StringRedisSerializer());
         template.setHashKeySerializer(new StringRedisSerializer());

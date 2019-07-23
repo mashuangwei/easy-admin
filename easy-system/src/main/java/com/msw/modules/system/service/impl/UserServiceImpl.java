@@ -2,6 +2,7 @@ package com.msw.modules.system.service.impl;
 
 import com.msw.exception.EntityNotFoundException;
 import com.msw.modules.monitor.service.RedisService;
+import com.msw.modules.system.domain.vo.UserVo;
 import com.msw.modules.system.repository.UserRepository;
 import com.msw.modules.system.service.dto.UserQueryCriteria;
 import com.msw.modules.system.service.mapper.UserMapper;
@@ -18,8 +19,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Date;
-import java.util.Optional;
+
+import java.util.*;
 
 /**
  * @author mashuangwei
@@ -49,6 +50,28 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findById(id);
         ValidationUtil.isNull(user,"User","id",id);
         return userMapper.toDto(user.get());
+    }
+
+    @Override
+    public List<UserVo> findUsersById(long id) {
+        List<User> userList = userRepository.findUsersById(id);
+        Iterator<User> iterator = userList.iterator();
+        List<UserVo> userVoList = new ArrayList<>();
+        while (iterator.hasNext()) {
+            User user = iterator.next();
+            UserVo userVo = new UserVo();
+            userVo.setChina_name(user.getChinaName());
+            userVo.setEmail(user.getEmail());
+            userVo.setUsername(user.getUsername());
+            userVo.setEnabled(user.getEnabled());
+            userVo.setJob_id(user.getJob().getId());
+            userVo.setDept_id(user.getDept_id());
+            userVo.setDept(user.getDept().getName());
+
+            userVoList.add(userVo);
+        }
+
+        return userVoList;
     }
 
     @Override

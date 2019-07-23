@@ -1,5 +1,6 @@
 package com.msw.modules.system.service;
 
+import com.msw.modules.system.domain.vo.UserVo;
 import com.msw.modules.system.service.dto.UserDTO;
 import com.msw.modules.system.domain.User;
 import com.msw.modules.system.service.dto.UserQueryCriteria;
@@ -7,6 +8,8 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 /**
  * @author mashuangwei
@@ -22,6 +25,14 @@ public interface UserService {
      */
     @Cacheable(key = "#p0")
     UserDTO findById(long id);
+
+    /**
+     * get
+     * @param id
+     * @return
+     */
+    @Cacheable(key = "#p0")
+    List<UserVo> findUsersById(long id);
 
     /**
      * create

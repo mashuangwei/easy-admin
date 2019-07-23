@@ -37,6 +37,9 @@ public class User implements Serializable {
     @Column(name = "china_name")
     private String chinaName;
 
+    @Column(name = "dept_id", insertable = false, updatable = false)
+    private Long dept_id;
+
     @NotBlank
     @Pattern(regexp = "([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}",message = "格式错误")
     private String email;

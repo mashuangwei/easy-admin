@@ -100,6 +100,13 @@ public class UserController {
         }
     }
 
+    @Log("根据登录用户所在部门查询其他用户")
+    @GetMapping(value = "/users/bydept")
+    @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT')")
+    public ResponseEntity getUsersById(){
+        return new ResponseEntity(userService.findUsersById(SecurityUtils.getUserId()), HttpStatus.OK);
+    }
+
     @Log("新增用户")
     @PostMapping(value = "/users")
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_CREATE')")
