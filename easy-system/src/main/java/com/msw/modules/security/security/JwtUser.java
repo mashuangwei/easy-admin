@@ -21,6 +21,8 @@ public class JwtUser implements UserDetails {
     @JsonIgnore
     private final Long id;
 
+    private final Long dept_id;
+
     private final String username;
 
     private final String chinaName;

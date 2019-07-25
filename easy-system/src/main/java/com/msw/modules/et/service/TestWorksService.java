@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.msw.modules.et.entity.App;
 import com.msw.modules.et.entity.TestWorks;
+import com.msw.modules.et.entity.dto.WorkTree;
 
 import java.util.List;
 
@@ -20,4 +21,6 @@ public interface TestWorksService extends IService<TestWorks> {
     IPage<TestWorks> searchBy(Page<TestWorks> page, TestWorks testWorks);
 
     List<TestWorks> queryAll();
+
+    WorkTree queryWorksByDeptid(Long dept_id, Long createor);
 }

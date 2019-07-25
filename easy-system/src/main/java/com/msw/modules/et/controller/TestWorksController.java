@@ -2,6 +2,7 @@ package com.msw.modules.et.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.msw.modules.et.entity.TestWorks;
+import com.msw.modules.et.entity.dto.WorkTree;
 import com.msw.modules.et.service.TestWorksService;
 import com.msw.utils.PageUtil;
 import com.msw.utils.SecurityUtils;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,7 +22,7 @@ public class TestWorksController {
 
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody TestWorks testWorks) {
-        testWorks.setCreateor(SecurityUtils.getUsername());
+        testWorks.setCreateor(SecurityUtils.getUserId());
         if(testWorksService.add(testWorks) < 0){
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
@@ -28,7 +31,7 @@ public class TestWorksController {
 
     @PutMapping("/update")
     public ResponseEntity update(@RequestBody TestWorks testWorks) {
-        testWorks.setCreateor(SecurityUtils.getUsername());
+        testWorks.setCreateor(SecurityUtils.getUserId());
         if(testWorksService.update(testWorks) < 0){
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
@@ -58,5 +61,14 @@ public class TestWorksController {
         List<TestWorks> appList = testWorksService.queryAll();
         return new ResponseEntity(PageUtil.toPage(appList, appList.size()), HttpStatus.OK);
     }
+
+    @GetMapping("/query/by/deptid")
+    public ResponseEntity queryByDeptid(){
+        WorkTree workTree = testWorksService.queryWorksByDeptid(SecurityUtils.getDeptId(), SecurityUtils.getUserId());
+        List<WorkTree> workTreeList = new ArrayList<>();
+        workTreeList.add(workTree);
+        return new ResponseEntity(PageUtil.toPage(workTreeList), HttpStatus.OK);
+    }
+
 
 }

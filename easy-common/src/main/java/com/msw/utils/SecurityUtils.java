@@ -34,6 +34,26 @@ public class SecurityUtils {
     }
 
     /**
+     * 获取系统用户所在部门名称
+     * @return 所在部门名称
+     */
+    public static String getDept(){
+        Object obj = getUserDetails();
+        JSONObject json = new JSONObject(obj);
+        return json.get("dept", String.class);
+    }
+
+    /**
+     * 获取系统用户所在部门ID
+     * @return 系统用户所在部门ID
+     */
+    public static Long getDeptId(){
+        Object obj = getUserDetails();
+        JSONObject json = new JSONObject(obj);
+        return json.get("dept_id", Long.class);
+    }
+
+    /**
      * 获取系统用户id
      * @return 系统用户id
      */

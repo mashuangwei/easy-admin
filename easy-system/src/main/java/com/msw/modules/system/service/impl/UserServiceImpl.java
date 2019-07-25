@@ -52,6 +52,11 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(user.get());
     }
 
+    /**
+     * 根据登录用户的ID查出该用户所在部门的所有用户
+     * @param id
+     * @return
+     */
     @Override
     public List<UserVo> findUsersById(long id) {
         List<User> userList = userRepository.findUsersById(id);
@@ -60,6 +65,7 @@ public class UserServiceImpl implements UserService {
         while (iterator.hasNext()) {
             User user = iterator.next();
             UserVo userVo = new UserVo();
+            userVo.setId(user.getId());
             userVo.setChina_name(user.getChinaName());
             userVo.setEmail(user.getEmail());
             userVo.setUsername(user.getUsername());

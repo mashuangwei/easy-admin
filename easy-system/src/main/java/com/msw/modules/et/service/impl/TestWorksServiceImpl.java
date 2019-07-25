@@ -6,15 +6,24 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.msw.modules.et.entity.App;
 import com.msw.modules.et.entity.TestWorks;
+import com.msw.modules.et.entity.dto.UsersTree;
+import com.msw.modules.et.entity.dto.WorkTree;
+import com.msw.modules.et.entity.dto.WorksDto;
 import com.msw.modules.et.mapper.TestWorksMapper;
 import com.msw.modules.et.service.TestWorksService;
+import com.msw.modules.security.security.JwtUser;
+import com.msw.modules.system.domain.vo.UserVo;
+import com.msw.modules.system.service.UserService;
 import com.msw.utils.SecurityUtils;
 import freemarker.template.utility.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +31,10 @@ import java.util.stream.Collectors;
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true, rollbackFor = Exception.class)
 @Slf4j
 public class TestWorksServiceImpl extends ServiceImpl<TestWorksMapper, TestWorks> implements TestWorksService {
+
+    @Autowired
+    private UserService userService;
+
     @Override
     public int add(TestWorks testWorks) {
         return baseMapper.insert(testWorks);
@@ -77,5 +90,46 @@ public class TestWorksServiceImpl extends ServiceImpl<TestWorksMapper, TestWorks
     @Override
     public List<TestWorks> queryAll() {
         return baseMapper.selectList(null);
+    }
+
+    @Override
+    public WorkTree queryWorksByDeptid(Long dept_id, Long createor) {
+        WorkTree workTree = new WorkTree();
+        workTree.setId(999999999L);
+        List<UsersTree> usersTreeList = new ArrayList<>();
+        workTree.setLabel(SecurityUtils.getDept());
+
+        final List<TestWorks> testWorksList = baseMapper.queryWorksByDeptid(dept_id, createor);
+        List<UserVo> userVoList = userService.findUsersById(SecurityUtils.getUserId());
+
+        for (int i = 0; i < userVoList.size(); i++) {
+            UsersTree usersTree = new UsersTree();
+            usersTree.setId(userVoList.get(i).getId());
+            usersTree.setLabel(userVoList.get(i).getUsername());
+            List<WorksDto> worksDtos = new ArrayList<>();
+            for (int j = 0; j < testWorksList.size(); j++) {
+                TestWorks testWorks = testWorksList.get(j);
+                if (testWorks.getTester().equalsIgnoreCase(userVoList.get(i).getUsername())) {
+                    WorksDto worksDto = new WorksDto();
+                    worksDto.setId(testWorks.getId());
+                    worksDto.setLabel(testWorks.getTaskName());
+                    worksDto.setCreateor(testWorks.getCreateor());
+                    worksDto.setDeveloper(testWorks.getDeveloper());
+                    worksDto.setNote(testWorks.getNote());
+                    worksDto.setPriority(testWorks.getPriority());
+                    worksDto.setStatus(testWorks.getStatus());
+                    worksDto.setTester(testWorks.getTester());
+                    worksDto.setTaskName(testWorks.getTaskName());
+                    worksDto.setStartDate(testWorks.getStartDate());
+                    worksDto.setFinishDate(testWorks.getStartDate());
+                    worksDto.setPercentage(testWorks.getPercentage());
+                    worksDtos.add(worksDto);
+                }
+            }
+            usersTreeList.add(usersTree);
+            usersTree.setChildren(worksDtos);
+        }
+        workTree.setChildren(usersTreeList);
+        return workTree;
     }
 }

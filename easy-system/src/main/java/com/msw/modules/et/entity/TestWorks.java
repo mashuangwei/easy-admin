@@ -61,8 +61,10 @@ public class TestWorks implements Serializable {
     @TableField(value = "create_time", fill = FieldFill.INSERT)
     private Date create_time;
 
-    private String createor;
+    private Long createor;
 
     private String tester;
+
+    private String priority;
 
 }
