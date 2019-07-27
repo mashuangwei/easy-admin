@@ -7,7 +7,7 @@
     <groupId>com.msw</groupId>
     <artifactId>easy-admin</artifactId>
     <packaging>pom</packaging>
-    <version>1.7</version>
+    <version>2.1</version>
 
     <modules>
         <module>easy-common</module>
@@ -45,7 +45,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-mongodb</artifactId>
-            <version>2.1.5.RELEASE</version>
+            <version>2.1.6.RELEASE</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
