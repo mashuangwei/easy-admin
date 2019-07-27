@@ -93,7 +93,7 @@ public class TestWorksServiceImpl extends ServiceImpl<TestWorksMapper, TestWorks
     }
 
     @Override
-    public WorkTree queryWorksByDeptid(Long dept_id, Long createor) {
+    public WorkTree queryWorksByDeptid(Long dept_id, String createor) {
         WorkTree workTree = new WorkTree();
         workTree.setId(999999999L);
         List<UsersTree> usersTreeList = new ArrayList<>();
@@ -109,22 +109,31 @@ public class TestWorksServiceImpl extends ServiceImpl<TestWorksMapper, TestWorks
             List<WorksDto> worksDtos = new ArrayList<>();
             for (int j = 0; j < testWorksList.size(); j++) {
                 TestWorks testWorks = testWorksList.get(j);
-                if (testWorks.getTester().equalsIgnoreCase(userVoList.get(i).getUsername())) {
-                    WorksDto worksDto = new WorksDto();
-                    worksDto.setId(testWorks.getId());
-                    worksDto.setLabel(testWorks.getTaskName());
-                    worksDto.setCreateor(testWorks.getCreateor());
-                    worksDto.setDeveloper(testWorks.getDeveloper());
-                    worksDto.setNote(testWorks.getNote());
-                    worksDto.setPriority(testWorks.getPriority());
-                    worksDto.setStatus(testWorks.getStatus());
-                    worksDto.setTester(testWorks.getTester());
-                    worksDto.setTaskName(testWorks.getTaskName());
-                    worksDto.setStartDate(testWorks.getStartDate());
-                    worksDto.setFinishDate(testWorks.getStartDate());
-                    worksDto.setPercentage(testWorks.getPercentage());
-                    worksDtos.add(worksDto);
+                String tester = testWorks.getTester();
+                if (tester != null) {
+                    String[] split = tester.split(",");
+                    for (int k = 0; k < split.length; k++) {
+                        if (split[k].equalsIgnoreCase(userVoList.get(i).getUsername())) {
+                            WorksDto worksDto = new WorksDto();
+                            worksDto.setId(testWorks.getId());
+                            worksDto.setLabel(testWorks.getTaskName());
+                            worksDto.setCreateor(testWorks.getCreateor());
+                            worksDto.setDeveloper(testWorks.getDeveloper());
+                            worksDto.setNote(testWorks.getNote());
+                            worksDto.setPriority(testWorks.getPriority());
+                            worksDto.setStatus(testWorks.getStatus());
+                            worksDto.setTester(testWorks.getTester());
+                            worksDto.setTaskName(testWorks.getTaskName());
+                            worksDto.setStartDate(testWorks.getStartDate());
+                            worksDto.setFinishDate(testWorks.getStartDate());
+                            worksDto.setPercentage(testWorks.getPercentage());
+                            worksDtos.add(worksDto);
+                            break;
+                        }
+                    }
+
                 }
+
             }
             usersTreeList.add(usersTree);
             usersTree.setChildren(worksDtos);

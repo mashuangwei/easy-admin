@@ -65,6 +65,14 @@ public interface UserService {
     UserDTO findByName(String userName);
 
     /**
+     * findByUserName
+     * @param userName
+     * @return
+     */
+    @Cacheable(key = "'loadUserListByUsername:'+#p0")
+    List<UserVo> findByUserName(String userName);
+
+    /**
      * 修改密码
      * @param username
      * @param encryptPassword

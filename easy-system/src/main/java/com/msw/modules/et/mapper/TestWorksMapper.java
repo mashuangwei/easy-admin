@@ -12,5 +12,5 @@ import java.util.List;
 public interface TestWorksMapper extends BaseMapper<TestWorks> {
 
     @Select("select id, task_name taskName, percentage, tester, createor, status, priority, developer, start_date startDate, note, finish_date finishDate  from tb_works where dept_id = #{dept_id} or createor = #{createor}")
-    List<TestWorks> queryWorksByDeptid(@Param("dept_id") Long dept_id, @Param("createor") Long createor);
+    List<TestWorks> queryWorksByDeptid(@Param("dept_id") Long dept_id, @Param("createor") String createor);
 }

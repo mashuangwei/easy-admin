@@ -22,7 +22,7 @@ public class TestWorksController {
 
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody TestWorks testWorks) {
-        testWorks.setCreateor(SecurityUtils.getUserId());
+        testWorks.setCreateor(SecurityUtils.getUsername());
         if(testWorksService.add(testWorks) < 0){
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
@@ -31,7 +31,7 @@ public class TestWorksController {
 
     @PutMapping("/update")
     public ResponseEntity update(@RequestBody TestWorks testWorks) {
-        testWorks.setCreateor(SecurityUtils.getUserId());
+        testWorks.setCreateor(SecurityUtils.getUsername());
         if(testWorksService.update(testWorks) < 0){
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
@@ -64,7 +64,7 @@ public class TestWorksController {
 
     @GetMapping("/query/by/deptid")
     public ResponseEntity queryByDeptid(){
-        WorkTree workTree = testWorksService.queryWorksByDeptid(SecurityUtils.getDeptId(), SecurityUtils.getUserId());
+        WorkTree workTree = testWorksService.queryWorksByDeptid(SecurityUtils.getDeptId(), SecurityUtils.getUsername());
         List<WorkTree> workTreeList = new ArrayList<>();
         workTreeList.add(workTree);
         return new ResponseEntity(PageUtil.toPage(workTreeList), HttpStatus.OK);

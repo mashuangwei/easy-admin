@@ -17,7 +17,7 @@ public class WorksDto {
     private int index = 3;
     private String label;
     private String status;
-    private Long createor;
+    private String createor;
     private String taskName;
     private String tester;
     private String note;

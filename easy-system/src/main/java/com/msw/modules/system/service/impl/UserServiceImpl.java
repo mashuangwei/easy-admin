@@ -158,6 +158,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserVo> findByUserName(String userName) {
+        List<User> userList = userRepository.findAllByUsernameContaining(userName);
+        List<UserVo> userVoList = new ArrayList<>();
+        for (int i = 0; i < userList.size(); i++) {
+            UserVo userVo = new UserVo();
+            userVo.setChina_name(userList.get(i).getChinaName());
+            userVo.setId(userList.get(i).getId());
+            userVo.setUsername(userList.get(i).getUsername());
+            userVoList.add(userVo);
+        }
+        return userVoList;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePass(String username, String pass) {
         userRepository.updatePass(username,pass,new Date());

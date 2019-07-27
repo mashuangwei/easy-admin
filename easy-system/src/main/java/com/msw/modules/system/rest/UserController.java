@@ -62,6 +62,14 @@ public class UserController {
     @Autowired
     private VerificationCodeService verificationCodeService;
 
+
+    @Log("查询用户")
+    @GetMapping(value = "/users/by/username")
+    public ResponseEntity searchUsersByUserName(String userName){
+        return new ResponseEntity(userService.findByUserName(userName), HttpStatus.OK);
+    }
+
+
     @Log("查询用户")
     @GetMapping(value = "/users")
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT')")

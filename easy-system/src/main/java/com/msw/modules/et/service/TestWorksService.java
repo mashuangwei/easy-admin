@@ -22,5 +22,5 @@ public interface TestWorksService extends IService<TestWorks> {
 
     List<TestWorks> queryAll();
 
-    WorkTree queryWorksByDeptid(Long dept_id, Long createor);
+    WorkTree queryWorksByDeptid(Long dept_id, String createor);
 }

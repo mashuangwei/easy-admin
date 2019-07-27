@@ -23,6 +23,8 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
      */
     User findByUsername(String username);
 
+    List<User> findAllByUsernameContaining(String userName);
+
     @Query(value = "select * from user as u where dept_id=( select dept_id from user where id = ?1)",nativeQuery = true)
     List<User> findUsersById(Long id);
 
