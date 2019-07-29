@@ -23,6 +23,7 @@ public class TestWorksController {
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody TestWorks testWorks) {
         testWorks.setCreateor(SecurityUtils.getUsername());
+        testWorks.setDept_id(SecurityUtils.getDeptId().toString());
         if(testWorksService.add(testWorks) < 0){
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }

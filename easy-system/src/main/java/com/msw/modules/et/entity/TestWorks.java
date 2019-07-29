@@ -67,4 +67,6 @@ public class TestWorks implements Serializable {
 
     private String priority;
 
+    private String dept_id;
+
 }
