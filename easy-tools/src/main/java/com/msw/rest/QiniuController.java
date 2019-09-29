@@ -19,7 +19,7 @@ import java.util.Map;
 
 /**
  * 发送邮件
- * @author 郑杰
+ * @author mashuangwei
  * @date 2018/09/28 6:55:53
  */
 @Slf4j
@@ -39,6 +39,7 @@ public class QiniuController {
     @PutMapping(value = "/qiNiuConfig")
     public ResponseEntity emailConfig(@Validated @RequestBody QiniuConfig qiniuConfig){
         qiNiuService.update(qiniuConfig);
+        qiNiuService.update(qiniuConfig.getType());
         return new ResponseEntity(HttpStatus.OK);
     }
 

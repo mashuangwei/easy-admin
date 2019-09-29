@@ -12,18 +12,12 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @author Zheng Jie
+ * @author mashuangwei
  * @date 2019-6-4 14:59:48
  */
 @Slf4j
 public class QueryHelp {
 
-    /**
-     * @描述 :  转换为Predicate
-     * @作者 :  Dong ZhaoYang
-     * @日期 :  2017/8/7
-     * @时间 :  17:25
-     */
     @SuppressWarnings("unchecked")
     public static <R, Q> Predicate getPredicate(Root<R> root, Q query, CriteriaBuilder cb) {
         List<Predicate> list = new ArrayList<>();
@@ -40,21 +34,45 @@ public class QueryHelp {
                 if (q != null) {
                     String propName = q.propName();
                     String joinName = q.joinName();
+                    String blurry = q.blurry();
                     String attributeName = isBlank(propName) ? field.getName() : propName;
                     Class<?> fieldType = field.getType();
                     Object val = field.get(query);
-                    if (ObjectUtil.isNull(val)) {
+                    if (ObjectUtil.isNull(val) || "".equals(val)) {
                         continue;
                     }
                     Join join = null;
+                    // 模糊多字段
+                    if (ObjectUtil.isNotEmpty(blurry)) {
+                        String[] blurrys = blurry.split(",");
+                        List<Predicate> orPredicate = new ArrayList<>();
+                        for (String s : blurrys) {
+                            orPredicate.add(cb.like(root.get(s)
+                                    .as(String.class), "%" + val.toString() + "%"));
+                        }
+                        Predicate[] p = new Predicate[orPredicate.size()];
+                        list.add(cb.or(orPredicate.toArray(p)));
+                        continue;
+                    }
                     if (ObjectUtil.isNotEmpty(joinName)) {
-                        switch (q.join()) {
-                            case LEFT:
-                                join = root.join(joinName, JoinType.LEFT);
-                                break;
-                            case RIGHT:
-                                join = root.join(joinName, JoinType.RIGHT);
-                                break;
+                        String[] joinNames = joinName.split(">");
+                        for (String name : joinNames) {
+                            switch (q.join()) {
+                                case LEFT:
+                                    if(ObjectUtil.isNotEmpty(join)){
+                                        join = join.join(name, JoinType.LEFT);
+                                    } else {
+                                        join = root.join(name, JoinType.LEFT);
+                                    }
+                                    break;
+                                case RIGHT:
+                                    if(ObjectUtil.isNotEmpty(join)){
+                                        join = join.join(name, JoinType.RIGHT);
+                                    } else {
+                                        join = root.join(name, JoinType.RIGHT);
+                                    }
+                                    break;
+                            }
                         }
                     }
                     switch (q.type()) {

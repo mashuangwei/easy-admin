@@ -1,7 +1,7 @@
 package com.msw.modules.system.service.impl;
 
 import com.msw.modules.system.repository.RoleRepository;
-import com.msw.modules.system.service.dto.CommonQueryCriteria;
+import com.msw.modules.system.service.dto.RoleQueryCriteria;
 import com.msw.modules.system.service.dto.RoleSmallDTO;
 import com.msw.modules.system.service.mapper.RoleSmallMapper;
 import com.msw.utils.PageUtil;
@@ -45,7 +45,12 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Object queryAll(CommonQueryCriteria criteria, Pageable pageable) {
+    public List<RoleDTO> queryAll(RoleQueryCriteria criteria) {
+        return roleMapper.toDto(roleRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
+
+    @Override
+    public Object queryAll(RoleQueryCriteria criteria, Pageable pageable) {
         Page<Role> page = roleRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(roleMapper::toDto));
     }
@@ -104,13 +109,15 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void untiedMenu(Menu menu) {
-        Set<Role> roles = roleRepository.findByMenus_Id(menu.getId());
-        for (Role role : roles) {
-            menu.getRoles().remove(role);
-            role.getMenus().remove(menu);
-            roleRepository.save(role);
-        }
+    @Transactional(rollbackFor = Exception.class)
+    public void untiedMenu(Long id) {
+        roleRepository.untiedMenu(id);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void untiedPermission(Long id) {
+        roleRepository.untiedPermission(id);
     }
 
     @Override
@@ -133,3 +140,4 @@ public class RoleServiceImpl implements RoleService {
         return Collections.min(roleDTOS.stream().map(RoleDTO::getLevel).collect(Collectors.toList()));
     }
 }
+

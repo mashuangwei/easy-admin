@@ -78,18 +78,14 @@ public class QiNiuServiceImpl implements QiNiuService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public QiniuContent upload(MultipartFile file, QiniuConfig qiniuConfig) {
-
-        Long size = maxSize * 1024 * 1024;
-        if(file.getSize() > size){
-            throw new BadRequestException("文件超出规定大小");
-        }
+        FileUtil.checkSize(maxSize, file.getSize());
         if(qiniuConfig.getId() == null){
             throw new BadRequestException("请先添加相应配置，再操作");
         }
         /**
          * 构造一个带指定Zone对象的配置类
          */
-        Configuration cfg = QiNiuUtil.getConfiguration(qiniuConfig.getZone());
+        Configuration cfg = new Configuration(QiNiuUtil.getRegion(qiniuConfig.getZone()));
         UploadManager uploadManager = new UploadManager(cfg);
         Auth auth = Auth.create(qiniuConfig.getAccessKey(), qiniuConfig.getSecretKey());
         String upToken = auth.uploadToken(qiniuConfig.getBucket());
@@ -103,9 +99,10 @@ public class QiNiuServiceImpl implements QiNiuService {
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
             //存入数据库
             QiniuContent qiniuContent = new QiniuContent();
+            qiniuContent.setSuffix(FileUtil.getExtensionName(putRet.key));
             qiniuContent.setBucket(qiniuConfig.getBucket());
             qiniuContent.setType(qiniuConfig.getType());
-            qiniuContent.setKey(putRet.key);
+            qiniuContent.setKey(FileUtil.getFileNameNoEx(putRet.key));
             qiniuContent.setUrl(qiniuConfig.getHost()+"/"+putRet.key);
             qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(file.getSize()+"")));
             return qiniuContentRepository.save(qiniuContent);
@@ -141,11 +138,11 @@ public class QiNiuServiceImpl implements QiNiuService {
     @Transactional(rollbackFor = Exception.class)
     public void delete(QiniuContent content, QiniuConfig config) {
         //构造一个带指定Zone对象的配置类
-        Configuration cfg = QiNiuUtil.getConfiguration(config.getZone());
+        Configuration cfg = new Configuration(QiNiuUtil.getRegion(config.getZone()));
         Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, cfg);
         try {
-            bucketManager.delete(content.getBucket(), content.getKey());
+            bucketManager.delete(content.getBucket(), content.getKey() + "." + content.getSuffix());
             qiniuContentRepository.delete(content);
         } catch (QiniuException ex) {
             qiniuContentRepository.delete(content);
@@ -159,7 +156,7 @@ public class QiNiuServiceImpl implements QiNiuService {
             throw new BadRequestException("请先添加相应配置，再操作");
         }
         //构造一个带指定Zone对象的配置类
-        Configuration cfg = QiNiuUtil.getConfiguration(config.getZone());
+        Configuration cfg = new Configuration(QiNiuUtil.getRegion(config.getZone()));
         Auth auth = Auth.create(config.getAccessKey(), config.getSecretKey());
         BucketManager bucketManager = new BucketManager(auth, cfg);
         //文件名前缀
@@ -175,10 +172,11 @@ public class QiNiuServiceImpl implements QiNiuService {
             QiniuContent qiniuContent = null;
             FileInfo[] items = fileListIterator.next();
             for (FileInfo item : items) {
-                if(qiniuContentRepository.findByKey(item.key) == null){
+                if(qiniuContentRepository.findByKey(FileUtil.getFileNameNoEx(item.key)) == null){
                     qiniuContent = new QiniuContent();
                     qiniuContent.setSize(FileUtil.getSize(Integer.parseInt(item.fsize+"")));
-                    qiniuContent.setKey(item.key);
+                    qiniuContent.setSuffix(FileUtil.getExtensionName(item.key));
+                    qiniuContent.setKey(FileUtil.getFileNameNoEx(item.key));
                     qiniuContent.setType(config.getType());
                     qiniuContent.setBucket(config.getBucket());
                     qiniuContent.setUrl(config.getHost()+"/"+item.key);
@@ -186,7 +184,6 @@ public class QiNiuServiceImpl implements QiNiuService {
                 }
             }
         }
-
     }
 
     @Override
@@ -194,5 +191,11 @@ public class QiNiuServiceImpl implements QiNiuService {
         for (Long id : ids) {
             delete(findByContentId(id), config);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void update(String type) {
+        qiNiuConfigRepository.update(type);
     }
 }

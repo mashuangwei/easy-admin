@@ -2,18 +2,15 @@ package com.msw.utils;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.data.domain.Page;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 /**
  * 分页工具
  * @author mashuangwei
  * @date 2018-12-10
  */
-public class PageUtil {
-
+public class PageUtil  extends cn.hutool.core.util.PageUtil {
 
     /**
      * List 分页

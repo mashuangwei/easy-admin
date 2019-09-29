@@ -7,8 +7,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.interceptor.CacheErrorHandler;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +45,6 @@ public class RedisConfig extends CachingConfigurerSupport {
         configuration = configuration.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJsonRedisSerializer)).entryTtl(Duration.ofDays(1));
         return configuration;
     }
-
 
     @Bean(name = "redisTemplate")
     @ConditionalOnMissingBean(name = "redisTemplate")
@@ -89,5 +90,34 @@ public class RedisConfig extends CachingConfigurerSupport {
             }
             return sb.toString();
         };
+    }
+
+    @Bean
+    @Override
+    public CacheErrorHandler errorHandler() {
+        // 异常处理，当Redis发生异常时，打印日志，但是程序正常走
+        log.info("初始化 -> [{}]", "Redis CacheErrorHandler");
+        CacheErrorHandler cacheErrorHandler = new CacheErrorHandler() {
+            @Override
+            public void handleCacheGetError(RuntimeException e, Cache cache, Object key) {
+                log.error("Redis occur handleCacheGetError：key -> [{}]", key, e);
+            }
+
+            @Override
+            public void handleCachePutError(RuntimeException e, Cache cache, Object key, Object value) {
+                log.error("Redis occur handleCachePutError：key -> [{}]；value -> [{}]", key, value, e);
+            }
+
+            @Override
+            public void handleCacheEvictError(RuntimeException e, Cache cache, Object key) {
+                log.error("Redis occur handleCacheEvictError：key -> [{}]", key, e);
+            }
+
+            @Override
+            public void handleCacheClearError(RuntimeException e, Cache cache) {
+                log.error("Redis occur handleCacheClearError：", e);
+            }
+        };
+        return cacheErrorHandler;
     }
 }

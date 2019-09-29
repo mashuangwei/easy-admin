@@ -5,12 +5,12 @@ import ${package}.domain.${className};
     <#list columns as column>
         <#if column.columnKey = 'UNI'>
             <#if column_index = 1>
-import com.msw.exception.EntityExistException;
+import me.zhengjie.exception.EntityExistException;
             </#if>
         </#if>
     </#list>
 </#if>
-import com.msw.utils.ValidationUtil;
+import me.zhengjie.utils.ValidationUtil;
 import ${package}.repository.${className}Repository;
 import ${package}.service.${className}Service;
 import ${package}.service.dto.${className}DTO;
@@ -30,8 +30,10 @@ import cn.hutool.core.util.IdUtil;
 </#if>
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import com.msw.utils.PageUtil;
-import com.msw.utils.QueryHelp;
+import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.QueryHelp;
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author ${author}
@@ -48,13 +50,13 @@ public class ${className}ServiceImpl implements ${className}Service {
     private ${className}Mapper ${changeClassName}Mapper;
 
     @Override
-    public Object queryAll(${className}QueryCriteria criteria, Pageable pageable){
+    public Map<String,Object> queryAll(${className}QueryCriteria criteria, Pageable pageable){
         Page<${className}> page = ${changeClassName}Repository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder),pageable);
         return PageUtil.toPage(page.map(${changeClassName}Mapper::toDto));
     }
 
     @Override
-    public Object queryAll(${className}QueryCriteria criteria){
+    public List<${className}DTO> queryAll(${className}QueryCriteria criteria){
         return ${changeClassName}Mapper.toDto(${changeClassName}Repository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 

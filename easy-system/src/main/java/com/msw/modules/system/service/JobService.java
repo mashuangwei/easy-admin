@@ -2,9 +2,11 @@ package com.msw.modules.system.service;
 
 import com.msw.modules.system.domain.Job;
 import com.msw.modules.system.service.dto.JobDTO;
+import com.msw.modules.system.service.dto.JobQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 
 /**
 * @author mashuangwei
@@ -42,4 +44,12 @@ public interface JobService {
      */
     @CacheEvict(allEntries = true)
     void delete(Long id);
+
+    /**
+     * queryAll
+     * @param criteria
+     * @param pageable
+     * @return
+     */
+    Object queryAll(JobQueryCriteria criteria, Pageable pageable);
 }

@@ -23,7 +23,7 @@ public interface QiNiuService {
      * @param pageable
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object queryAll(QiniuQueryCriteria criteria, Pageable pageable);
 
     /**
@@ -89,4 +89,7 @@ public interface QiNiuService {
      */
     @CacheEvict(allEntries = true)
     void deleteAll(Long[] ids, QiniuConfig config);
+
+    @CacheEvict(allEntries = true)
+    void update(String type);
 }

@@ -1,14 +1,16 @@
 package com.msw.modules.system.service;
 
 import com.msw.modules.system.domain.Menu;
-import com.msw.modules.system.service.dto.CommonQueryCriteria;
+
 import com.msw.modules.system.service.dto.MenuDTO;
+import com.msw.modules.system.service.dto.MenuQueryCriteria;
 import com.msw.modules.system.service.dto.RoleSmallDTO;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author mashuangwei
@@ -22,8 +24,8 @@ public interface MenuService {
      * @param criteria
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
-    List<MenuDTO> queryAll(CommonQueryCriteria criteria);
+    @Cacheable
+    List<MenuDTO> queryAll(MenuQueryCriteria criteria);
 
     /**
      * get
@@ -49,11 +51,12 @@ public interface MenuService {
     void update(Menu resources);
 
     /**
-     * delete
-     * @param id
+     * getDeleteMenus
+     * @param menuList
+     * @param menuSet
+     * @return
      */
-    @CacheEvict(allEntries = true)
-    void delete(Long id);
+    Set<Menu> getDeleteMenus(List<Menu> menuList, Set<Menu> menuSet);
 
     /**
      * permission tree
@@ -92,4 +95,11 @@ public interface MenuService {
     Object buildMenus(List<MenuDTO> byRoles);
 
     Menu findOne(Long id);
+
+    /**
+     * delete
+     * @param menuSet
+     */
+    @CacheEvict(allEntries = true)
+    void delete(Set<Menu> menuSet);
 }

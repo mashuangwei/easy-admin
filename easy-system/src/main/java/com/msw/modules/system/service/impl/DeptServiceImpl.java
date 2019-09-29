@@ -4,6 +4,8 @@ import com.msw.exception.BadRequestException;
 import com.msw.modules.system.domain.Dept;
 import com.msw.modules.system.repository.DeptRepository;
 import com.msw.modules.system.service.DeptService;
+import com.msw.modules.system.service.dto.DeptQueryCriteria;
+import com.msw.utils.QueryHelp;
 import com.msw.utils.ValidationUtil;
 import com.msw.modules.system.service.dto.DeptDTO;
 import com.msw.modules.system.service.mapper.DeptMapper;
@@ -29,6 +31,11 @@ public class DeptServiceImpl implements DeptService {
 
     @Autowired
     private DeptMapper deptMapper;
+
+    @Override
+    public List<DeptDTO> queryAll(DeptQueryCriteria criteria) {
+        return deptMapper.toDto(deptRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
+    }
 
     @Override
     public DeptDTO findById(Long id) {
@@ -99,9 +106,7 @@ public class DeptServiceImpl implements DeptService {
         }
         Optional<Dept> optionalDept = deptRepository.findById(resources.getId());
         ValidationUtil.isNull( optionalDept,"Dept","id",resources.getId());
-
         Dept dept = optionalDept.get();
-        // 此处需自己修改
         resources.setId(dept.getId());
         deptRepository.save(resources);
     }

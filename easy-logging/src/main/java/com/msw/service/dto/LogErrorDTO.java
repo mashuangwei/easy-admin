@@ -39,6 +39,8 @@ public class LogErrorDTO implements Serializable {
      */
     private String requestIp;
 
+    private String address;
+
 
     /**
      * 创建日期

@@ -20,7 +20,7 @@ public interface QuartzJobService {
      * @param pageable
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object queryAll(JobQueryCriteria criteria, Pageable pageable);
 
     /**

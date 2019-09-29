@@ -2,6 +2,7 @@ package com.msw.modules.system.service;
 
 import com.msw.modules.system.domain.Dept;
 import com.msw.modules.system.service.dto.DeptDTO;
+import com.msw.modules.system.service.dto.DeptQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -15,6 +16,14 @@ import java.util.Set;
 */
 @CacheConfig(cacheNames = "dept")
 public interface DeptService {
+
+    /**
+     * queryAll
+     * @param criteria
+     * @return
+     */
+    @Cacheable
+    List<DeptDTO> queryAll(DeptQueryCriteria criteria);
 
     /**
      * findById
@@ -51,7 +60,7 @@ public interface DeptService {
      * @param deptDTOS
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object buildTree(List<DeptDTO> deptDTOS);
 
     /**
@@ -59,7 +68,7 @@ public interface DeptService {
      * @param pid
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     List<Dept> findByPid(long pid);
 
     Set<Dept> findByRoleIds(Long id);

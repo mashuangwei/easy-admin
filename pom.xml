@@ -34,7 +34,7 @@
         <jedis.version>2.10.2</jedis.version>
         <log4jdbc.version>1.16</log4jdbc.version>
         <swagger.version>2.9.2</swagger.version>
-        <fastjson.version>1.2.61</fastjson.version>
+        <fastjson.version>1.2.60</fastjson.version>
         <druid.version>1.1.18</druid.version>
         <hutool.version>[4.5.16,)</hutool.version>
         <commons-pool2.version>2.5.0</commons-pool2.version>
@@ -47,7 +47,16 @@
             <artifactId>spring-data-mongodb</artifactId>
             <version>2.1.6.RELEASE</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>1.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.17</version>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
         <dependency>
             <groupId>org.mongodb</groupId>

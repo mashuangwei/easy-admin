@@ -98,8 +98,8 @@ spring:
 jwt:
   header: Authorization
   secret: mySecret
-  # token 过期时间 2个小时
-  expiration: 7200000
+  # token 过期时间 6个小时
+  expiration: 21000000
   #  expiration: 60000
   auth:
     # 授权路径
@@ -131,5 +131,14 @@ mybatis-plus:
       banner: false
 generator:
   enabled: true
+#是否开启 swagger-ui
 swagger:
-  enabled: true
+  enabled: false
+
+# 文件存储路径
+file:
+  path: /tmp/log/easy/file/
+  avatar: /tmp/log/easy/avatar/
+  # 文件大小 /M
+  maxSize: 100
+  avatarMaxSize: 5

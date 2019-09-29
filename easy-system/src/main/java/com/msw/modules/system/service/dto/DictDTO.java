@@ -16,12 +16,10 @@ public class DictDTO implements Serializable {
     /**
      * 字典名称
      */
-    @Query(type = Query.Type.INNER_LIKE)
     private String name;
 
     /**
      * 描述
      */
-    @Query(type = Query.Type.INNER_LIKE)
     private String remark;
 }

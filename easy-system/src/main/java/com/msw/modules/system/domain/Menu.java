@@ -35,17 +35,27 @@ public class Menu implements Serializable {
     @NotNull
     private Long sort;
 
+    @NotBlank
     @Column(name = "path")
     private String path;
 
     private String component;
 
+    @Column(unique = true,name = "component_name")
+    private String componentName;
+
     private String icon;
+
+    @Column(columnDefinition = "bit(1) default 0")
+    private Boolean cache;
+
+    @Column(columnDefinition = "bit(1) default 0")
+    private Boolean hidden;
 
     /**
      * 上级菜单ID
      */
-    @Column(name = "pid", nullable = false)
+    @Column(name = "pid",nullable = false)
     private Long pid;
 
     /**
@@ -62,17 +72,12 @@ public class Menu implements Serializable {
     @Column(name = "create_time")
     private Timestamp createTime;
 
-    public interface Update {
-    }
+    public interface Update{}
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         Menu menu = (Menu) o;
         return Objects.equals(id, menu.id);
     }
@@ -82,3 +87,4 @@ public class Menu implements Serializable {
         return Objects.hash(id);
     }
 }
+

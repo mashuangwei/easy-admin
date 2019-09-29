@@ -3,10 +3,15 @@ package com.msw.modules.system.service.impl;
 import com.msw.modules.system.domain.Dict;
 import com.msw.modules.system.repository.DictRepository;
 import com.msw.modules.system.service.DictService;
+import com.msw.modules.system.service.dto.DictQueryCriteria;
+import com.msw.utils.PageUtil;
+import com.msw.utils.QueryHelp;
 import com.msw.utils.ValidationUtil;
 import com.msw.modules.system.service.dto.DictDTO;
 import com.msw.modules.system.service.mapper.DictMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +32,12 @@ public class DictServiceImpl implements DictService {
     private DictMapper dictMapper;
 
     @Override
+    public Object queryAll(DictQueryCriteria dict, Pageable pageable){
+        Page<Dict> page = dictRepository.findAll((root, query, cb) -> QueryHelp.getPredicate(root, dict, cb), pageable);
+        return PageUtil.toPage(page.map(dictMapper::toDto));
+    }
+
+    @Override
     public DictDTO findById(Long id) {
         Optional<Dict> dict = dictRepository.findById(id);
         ValidationUtil.isNull(dict,"Dict","id",id);
@@ -44,9 +55,7 @@ public class DictServiceImpl implements DictService {
     public void update(Dict resources) {
         Optional<Dict> optionalDict = dictRepository.findById(resources.getId());
         ValidationUtil.isNull( optionalDict,"Dict","id",resources.getId());
-
         Dict dict = optionalDict.get();
-        // 此处需自己修改
         resources.setId(dict.getId());
         dictRepository.save(resources);
     }

@@ -5,7 +5,9 @@ import com.msw.config.DataScope;
 import com.msw.exception.BadRequestException;
 import com.msw.modules.system.domain.Job;
 import com.msw.modules.system.service.JobService;
+import com.msw.modules.system.service.dto.JobQueryCriteria;
 import com.msw.modules.system.service.query.JobQueryService;
+import com.msw.utils.ThrowableUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -28,9 +30,6 @@ public class JobController {
     private JobService jobService;
 
     @Autowired
-    private JobQueryService jobQueryService;
-
-    @Autowired
     private DataScope dataScope;
 
     private static final String ENTITY_NAME = "job";
@@ -38,13 +37,11 @@ public class JobController {
     @Log("查询岗位")
     @GetMapping(value = "/job")
     @PreAuthorize("hasAnyRole('ADMIN','USERJOB_ALL','USERJOB_SELECT','USER_ALL','USER_SELECT')")
-    public ResponseEntity getJobs(@RequestParam(required = false) String name,
-                                  @RequestParam(required = false) Long deptId,
-                                  @RequestParam(required = false) Boolean enabled,
+    public ResponseEntity getJobs(JobQueryCriteria criteria,
                                   Pageable pageable){
         // 数据权限
-        Set<Long> deptIds = dataScope.getDeptIds();
-        return new ResponseEntity(jobQueryService.queryAll(name, enabled , deptIds, deptId, pageable),HttpStatus.OK);
+        criteria.setDeptIds(dataScope.getDeptIds());
+        return new ResponseEntity(jobService.queryAll(criteria, pageable),HttpStatus.OK);
     }
 
     @Log("新增岗位")
@@ -69,7 +66,11 @@ public class JobController {
     @DeleteMapping(value = "/job/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','USERJOB_ALL','USERJOB_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
-        jobService.delete(id);
+        try {
+            jobService.delete(id);
+        }catch (Throwable e){
+            ThrowableUtil.throwForeignKeyException(e, "该岗位存在用户关联，请取消关联后再试");
+        }
         return new ResponseEntity(HttpStatus.OK);
     }
 }

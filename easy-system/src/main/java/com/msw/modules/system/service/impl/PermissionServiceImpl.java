@@ -2,8 +2,9 @@ package com.msw.modules.system.service.impl;
 
 import com.msw.exception.BadRequestException;
 import com.msw.modules.system.repository.PermissionRepository;
-import com.msw.modules.system.service.dto.CommonQueryCriteria;
+import com.msw.modules.system.service.RoleService;
 import com.msw.modules.system.service.dto.PermissionDTO;
+import com.msw.modules.system.service.dto.PermissionQueryCriteria;
 import com.msw.modules.system.service.mapper.PermissionMapper;
 import com.msw.utils.QueryHelp;
 import com.msw.utils.ValidationUtil;
@@ -30,8 +31,11 @@ public class PermissionServiceImpl implements PermissionService {
     @Autowired
     private PermissionMapper permissionMapper;
 
+    @Autowired
+    private RoleService roleService;
+
     @Override
-    public List<PermissionDTO> queryAll(CommonQueryCriteria criteria) {
+    public List<PermissionDTO> queryAll(PermissionQueryCriteria criteria) {
         return permissionMapper.toDto(permissionRepository.findAll((root, criteriaQuery, criteriaBuilder) -> QueryHelp.getPredicate(root,criteria,criteriaBuilder)));
     }
 
@@ -75,13 +79,25 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
+    public Set<Permission> getDeletePermission(List<Permission> permissions, Set<Permission> permissionSet) {
+        // 递归找出待删除的菜单
+        for (Permission permission : permissions) {
+            permissionSet.add(permission);
+            List<Permission> permissionList = permissionRepository.findByPid(permission.getId());
+            if(permissionList!=null && permissionList.size()!=0){
+                getDeletePermission(permissionList, permissionSet);
+            }
+        }
+        return permissionSet;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    public void delete(Long id) {
-        List<Permission> permissionList = permissionRepository.findByPid(id);
-        for (Permission permission : permissionList) {
+    public void delete(Set<Permission> permissions) {
+        for (Permission permission : permissions) {
+            roleService.untiedPermission(permission.getId());
             permissionRepository.delete(permission);
         }
-        permissionRepository.deleteById(id);
     }
 
     @Override
@@ -137,3 +153,4 @@ public class PermissionServiceImpl implements PermissionService {
         return map;
     }
 }
+

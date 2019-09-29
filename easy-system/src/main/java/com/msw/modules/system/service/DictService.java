@@ -2,9 +2,11 @@ package com.msw.modules.system.service;
 
 import com.msw.modules.system.domain.Dict;
 import com.msw.modules.system.service.dto.DictDTO;
+import com.msw.modules.system.service.dto.DictQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Pageable;
 
 /**
 * @author mashuangwei
@@ -12,6 +14,15 @@ import org.springframework.cache.annotation.Cacheable;
 */
 @CacheConfig(cacheNames = "dict")
 public interface DictService {
+
+    /**
+     * 查询
+     * @param dict
+     * @param pageable
+     * @return
+     */
+    @Cacheable
+    Object queryAll(DictQueryCriteria dict, Pageable pageable);
 
     /**
      * findById

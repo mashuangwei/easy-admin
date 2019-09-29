@@ -32,7 +32,9 @@ public class User implements Serializable {
     @Column(unique = true)
     private String username;
 
-    private String avatar;
+    @OneToOne
+    @JoinColumn(name = "avatar_id")
+    private UserAvatar userAvatar;
 
     @Column(name = "china_name")
     private String chinaName;
@@ -76,13 +78,11 @@ public class User implements Serializable {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", avatar='" + avatar + '\'' +
                 ", email='" + email + '\'' +
                 ", enabled=" + enabled +
                 ", password='" + password + '\'' +
                 ", createTime=" + createTime +
                 ", lastPasswordResetTime=" + lastPasswordResetTime +
-                ", chinaName=" + chinaName +
                 '}';
     }
 

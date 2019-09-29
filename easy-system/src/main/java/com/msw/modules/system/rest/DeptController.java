@@ -6,7 +6,9 @@ import com.msw.exception.BadRequestException;
 import com.msw.modules.system.domain.Dept;
 import com.msw.modules.system.service.DeptService;
 import com.msw.modules.system.service.dto.DeptDTO;
+import com.msw.modules.system.service.dto.DeptQueryCriteria;
 import com.msw.modules.system.service.query.DeptQueryService;
+import com.msw.utils.ThrowableUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +30,6 @@ public class DeptController {
     private DeptService deptService;
 
     @Autowired
-    private DeptQueryService deptQueryService;
-
-    @Autowired
     private DataScope dataScope;
 
     private static final String ENTITY_NAME = "dept";
@@ -38,10 +37,10 @@ public class DeptController {
     @Log("查询部门")
     @GetMapping(value = "/dept")
     @PreAuthorize("hasAnyRole('ADMIN','USER_ALL','USER_SELECT','DEPT_ALL','DEPT_SELECT')")
-    public ResponseEntity getDepts(DeptDTO resources){
+    public ResponseEntity getDepts(DeptQueryCriteria criteria){
         // 数据权限
-        Set<Long> deptIds = dataScope.getDeptIds();
-        List<DeptDTO> deptDTOS = deptQueryService.queryAll(resources, deptIds);
+        criteria.setIds(dataScope.getDeptIds());
+        List<DeptDTO> deptDTOS = deptService.queryAll(criteria);
         return new ResponseEntity(deptService.buildTree(deptDTOS),HttpStatus.OK);
     }
 
@@ -67,7 +66,11 @@ public class DeptController {
     @DeleteMapping(value = "/dept/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','DEPT_ALL','DEPT_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
-        deptService.delete(id);
+        try {
+            deptService.delete(id);
+        }catch (Throwable e){
+            ThrowableUtil.throwForeignKeyException(e, "该部门存在岗位或者角色关联，请取消关联后再试");
+        }
         return new ResponseEntity(HttpStatus.OK);
     }
 }

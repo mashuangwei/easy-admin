@@ -4,11 +4,11 @@ import cn.hutool.core.lang.Dict;
 import com.msw.aop.log.Log;
 import com.msw.exception.BadRequestException;
 import com.msw.modules.system.service.RoleService;
-import com.msw.modules.system.service.dto.CommonQueryCriteria;
+import com.msw.modules.system.service.dto.RoleQueryCriteria;
 import com.msw.modules.system.service.dto.RoleSmallDTO;
-import com.msw.modules.system.service.query.RoleQueryService;
 import com.msw.modules.system.domain.Role;
 import com.msw.utils.SecurityUtils;
+import com.msw.utils.ThrowableUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,7 +59,7 @@ public class RoleController {
     @Log("查询角色")
     @GetMapping(value = "/roles")
     @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','ROLES_SELECT')")
-    public ResponseEntity getRoles(CommonQueryCriteria criteria, Pageable pageable){
+    public ResponseEntity getRoles(RoleQueryCriteria criteria, Pageable pageable){
         return new ResponseEntity(roleService.queryAll(criteria,pageable),HttpStatus.OK);
     }
 
@@ -108,7 +107,11 @@ public class RoleController {
     @DeleteMapping(value = "/roles/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','ROLES_ALL','ROLES_DELETE')")
     public ResponseEntity delete(@PathVariable Long id){
-        roleService.delete(id);
+        try {
+            roleService.delete(id);
+        }catch (Throwable e){
+            ThrowableUtil.throwForeignKeyException(e, "该角色存在用户关联，请取消关联后再试");
+        }
         return new ResponseEntity(HttpStatus.OK);
     }
 }

@@ -1,13 +1,15 @@
 package com.msw.modules.system.service;
 
-import com.msw.modules.system.service.dto.CommonQueryCriteria;
+
 import com.msw.modules.system.service.dto.PermissionDTO;
 import com.msw.modules.system.domain.Permission;
+import com.msw.modules.system.service.dto.PermissionQueryCriteria;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author mashuangwei
@@ -41,10 +43,10 @@ public interface PermissionService {
 
     /**
      * delete
-     * @param id
+     * @param permissions
      */
     @CacheEvict(allEntries = true)
-    void delete(Long id);
+    void delete(Set<Permission> permissions);
 
     /**
      * permission tree
@@ -66,7 +68,7 @@ public interface PermissionService {
      * @param permissionDTOS
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
+    @Cacheable
     Object buildTree(List<PermissionDTO> permissionDTOS);
 
     /**
@@ -74,6 +76,8 @@ public interface PermissionService {
      * @param criteria
      * @return
      */
-    @Cacheable(keyGenerator = "keyGenerator")
-    List<PermissionDTO> queryAll(CommonQueryCriteria criteria);
+    @Cacheable
+    List<PermissionDTO> queryAll(PermissionQueryCriteria criteria);
+
+    Set<Permission> getDeletePermission(List<Permission> permissions, Set<Permission> permissionSet);
 }
